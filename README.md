@@ -1,7 +1,7 @@
 
-🚀 TaskFlow Pro
+🚀 Task Organizer
 
-TaskFlow Pro es una aplicación de gestión de tareas colaborativa y robusta, diseñada para mejorar la productividad individual y de equipo. Permite a los usuarios organizar, priorizar y asignar tareas dentro de proyectos, con un enfoque en la eficiencia y la colaboración fluida.
+Task Organizer es una aplicación de gestión de tareas colaborativa y robusta, diseñada para mejorar la productividad individual y de equipo. Permite a los usuarios organizar, priorizar y asignar tareas dentro de proyectos, con un enfoque en la eficiencia y la colaboración fluida.
 
 ✨ Características Principales
 
@@ -77,12 +77,12 @@ Asegúrate de tener instalado lo siguiente:
 
 Bash
 
-git clone https://github.com/tu-usuario/TaskFlow-Pro.git
-cd TaskFlow-Pro
+git clone https://github.com/tu-usuario/Task Organizer.git
+cd Task Organizer
 
 2. Configurar Variables de Entorno
 
-Crea un archivo .env en la raíz de la carpeta TaskFlow-Pro y un archivo .env.local dentro de la carpeta taskflow_frontend/.
+Crea un archivo .env en la raíz de la carpeta Task Organizer y un archivo .env.local dentro de la carpeta taskflow_frontend/.
 
 .env (en la raíz del proyecto)
 
