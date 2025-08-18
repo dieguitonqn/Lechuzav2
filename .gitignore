@@ -1,3 +1,26 @@
 
+# Ignorar directorios de módulos y entornos virtuales
 compose.yaml
 README.md
+.env
+**/node_modules/
+**/venv/
+
+# Ignorar archivos de caché y temporales de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorar directorios de caché de Next.js
+.next/
+
+# Ignorar archivos de logs
+*.log
+
+# Docker
+.dockerignore
+
+# Ignorar otros archivos
+*.drawio
+*.txt
