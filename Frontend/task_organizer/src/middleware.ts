@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
 
   try {
     console.log("Validating token via cookie...");
-    const response = await fetch(`http://localhost:8000/api/auth/mw`, {
+    const response = await fetch(`http://back01:8000/api/auth/mw`, {
       method: "GET",
       headers: {
       // Enviar el token como una cookie en el encabezado 'Cookie'

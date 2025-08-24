@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/fapi/:path*",
-        destination: "http://localhost:8000/api/:path*",
+        destination: "http://back01:8000/api/:path*",
         basePath: false,
       },
     ];
