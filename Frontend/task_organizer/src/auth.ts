@@ -11,7 +11,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        const res = await fetch("http://back01:8000/api/auth/login", {
+        const res = await fetch(`${process.env.AUTH_LOGIN_URL}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -33,10 +33,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks:{
     async redirect({ url, baseUrl }) {
-      if (url === baseUrl) {
+      
         return `${baseUrl}/main`
-      }
-      return url
+      
+      
     }
   }
 })
