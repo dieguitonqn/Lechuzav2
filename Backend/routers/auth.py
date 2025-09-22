@@ -3,9 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status, Cookie,
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlmodel import Session, select
-from models import User
+from models.users import User, UserCreate
 from database import get_session
-from schemas import UserCreate, UserBase
+
 from fastapi.security import OAuth2PasswordBearer
 import jwt
 from passlib.context import CryptContext

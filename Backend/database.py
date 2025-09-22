@@ -9,7 +9,13 @@ engine = create_engine(settings.database_url, echo=True, pool_recycle=3600) # ec
 
 def create_db_and_tables():
     # Se crean las tablas en la base de datos en modo development
-    from models import SQLModel             # Importa los modelos del archivo models.py para que SQLModel los use para hacer las tablas
+    from models.users import SQLModel             # Importa los modelos del archivo models.py para que SQLModel los use para hacer las tablas
+    from models.projects import SQLModel
+    from models.companies import SQLModel
+    from models.documents import SQLModel
+    from models.statuses import SQLModel
+    from models.correction_reports import SQLModel
+    from models.models_links import SQLModel
     SQLModel.metadata.create_all(engine)    # Crea las tablas en la base de datos si no existen. Si existen, no hace nada.
 
     # Para producción se utiliza Alembic para manejar las migraciones de la base de datos

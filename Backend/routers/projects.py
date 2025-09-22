@@ -1,25 +1,38 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Response, status, Cookie, Request
-from models import Project, User
+from fastapi import APIRouter, Depends, HTTPException, Response, status, Cookie, Request, UploadFile, File, Form
+from models.users import User
+from models.projects import ProjectCreate, Project
 from database import get_session, Session
-from auth import SECRET_KEY, ALGORITHM, create_access_token
+# from auth import SECRET_KEY, ALGORITHM, create_access_token
 import jwt
-from sqlmodel import Session,select, filter, first
+from sqlmodel import Session
 
-router = APIRouter()
+projects = APIRouter()
 
-@router.post("/project", status_code=status.HTTP_201_CREATED)
-async def create_project(project: Project, session: Session = Depends(get_session), access_token: Annotated[str, Cookie()]=None):
-    if not access_token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
-    payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
+@projects.post("/project", status_code=status.HTTP_201_CREATED)
+async def create_project(
+    name: str = Form(...),
+    code: str = Form(...),
+    description: str = Form(None),
+    emails_notification: list[str] = Form(...),
+    contract: str = Form(None),
+    contract_file: UploadFile = File(...),
+    session: Session = Depends(get_session)
+):
+    # Guardar el archivo PDF en modo binario
+    file_location = f"files/{contract_file.filename}"
+    with open(file_location, "wb") as f:
+        f.write(await contract_file.read())
 
-    email = payload.get("sub")
-    if not email:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-    if session.exec(select(User).where(User.email == email)).first() is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    session.add(project)
+    new_project = Project(
+        nombre=name,
+        codigo=code,
+        descripcion=description,
+        emails_notificacion=emails_notification,
+        contrato=contract,
+        contrato_url=file_location
+    )
+    session.add(new_project)
     session.commit()
-    session.refresh(project)
-    return project
+    session.refresh(new_project)
+    return new_project

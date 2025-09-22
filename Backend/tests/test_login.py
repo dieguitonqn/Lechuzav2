@@ -1,7 +1,7 @@
 import pytest
 from main import app
 from fastapi.testclient import TestClient
-from models import User
+from Backend.models.users import User
 from schemas import UserCreate
 
 
