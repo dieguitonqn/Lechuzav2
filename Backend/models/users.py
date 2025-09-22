@@ -17,7 +17,7 @@ from pydantic import BaseModel
 
 
 
-# La tabla User se mantiene igual, ya que solo se relaciona con UNA empresa
+
 class User(SQLModel, table=True):
     id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
     email: str = Field(unique=True, index=True)

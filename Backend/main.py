@@ -71,7 +71,7 @@ app.include_router(projects.projects, prefix="/api", tags=["projects"])
 
 # Configuración de CORS
 origins = [
-    "http://localhost:3000",  # Tu frontend Next.js
+    "http://localhost:3000",  # Next.js
     "http://127.0.0.1:3000",
 ]
 
