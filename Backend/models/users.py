@@ -15,9 +15,6 @@ from pydantic import BaseModel
 # Nueva tabla de relación para la lógica de permisos
 
 
-
-
-
 class User(SQLModel, table=True):
     id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
     email: str = Field(unique=True, index=True)
@@ -29,10 +26,11 @@ class User(SQLModel, table=True):
     fecha_creacion: datetime = Field(default_factory=datetime.now)
     password_reset_token: Optional[str] = None
     password_reset_expires: Optional[datetime] = None
-    project_ids: Optional[List[uuid.UUID]] = Field(default=None, sa_column=Column(JSON))
-    projects: Optional[List["Project"]] = Relationship(back_populates="users", link_model=ProjectUserLink)
+    
     company_id: Optional[uuid.UUID] = Field(default=None, foreign_key="company.id")
     company: Optional[Company] = Relationship(back_populates="users")
+# Relación a los proyectos a través de la tabla intermedia. Como es de muchos a muchos, es una lista y no tiene foreign_key
+    projects: Optional[List["Project"]] = Relationship(back_populates="users", link_model=ProjectUserLink)
 
 
 class UserCreate(BaseModel):

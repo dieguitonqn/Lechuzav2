@@ -12,7 +12,7 @@ users = APIRouter()
 
 
 
-@users.post("/user/create", response_model=UserCreate, status_code=status.HTTP_201_CREATED)
+@users.post("/users", response_model=UserCreate, status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreate, session: Session = Depends(get_session)):
     # print(user)
     db_user = User(
@@ -45,21 +45,11 @@ def read_users(session: Session = Depends(get_session)):
         raise e  # Re-raise the exception after logging it
     
 
-# @users.get("/user", response_model=User)
-# def read_user(user_id: str = None, session: Session = Depends(get_session)):
-
-#     if not user_id:
-#         raise HTTPException(status_code=400, detail="user_id query parameter required")
-#     print("User ID received:", user_id)
-#     user = session.get(User, user_id)
-#     if not user:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return user
-
-@users.get("/user/{user_id}", response_model=User)
+@users.get("/users/{user_id}")
 def read_user(user_id: uuid.UUID, session: Session = Depends(get_session)):
     db_user = session.get(User, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     print(f"Company Name: {db_user.company.nombre}")
-    return db_user
+    print (f"Projects: {db_user.projects}")
+    return [db_user, db_user.company, db_user.projects]

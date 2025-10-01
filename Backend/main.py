@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 
 from sqlmodel import Session, select
 from database import create_db_and_tables, engine
-from routers import users, auth, company, projects
+from routers import users, auth, company, projects, documents, ttal_np
 from routers.auth import crypt
 
 
@@ -68,6 +68,8 @@ app.include_router(users.users, prefix="/api", tags=["users"])
 app.include_router(auth.router, prefix="/api", tags=["auth"])
 app.include_router(company.router, prefix="/api", tags=["company"])
 app.include_router(projects.projects, prefix="/api", tags=["projects"])
+app.include_router(documents.documents, prefix="/api", tags=["documents"])
+app.include_router(ttal_np.ttal_np, prefix="/api", tags=["ttals_nps"])
 
 # Configuración de CORS
 origins = [

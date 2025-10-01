@@ -16,6 +16,7 @@ def create_db_and_tables():
     from models.statuses import SQLModel
     from models.correction_reports import SQLModel
     from models.models_links import SQLModel
+    from models.ttals_nps import SQLModel
     SQLModel.metadata.create_all(engine)    # Crea las tablas en la base de datos si no existen. Si existen, no hace nada.
 
     # Para producción se utiliza Alembic para manejar las migraciones de la base de datos

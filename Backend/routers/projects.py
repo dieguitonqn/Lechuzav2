@@ -5,11 +5,11 @@ from models.projects import ProjectCreate, Project
 from database import get_session, Session
 # from auth import SECRET_KEY, ALGORITHM, create_access_token
 import jwt
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 projects = APIRouter()
 
-@projects.post("/project", status_code=status.HTTP_201_CREATED)
+@projects.post("/projects", status_code=status.HTTP_201_CREATED)
 async def create_project(
     name: str = Form(...),
     code: str = Form(...),
@@ -36,3 +36,8 @@ async def create_project(
     session.commit()
     session.refresh(new_project)
     return new_project
+
+@projects.get("/projects", status_code=status.HTTP_200_OK)
+def read_projects(session: Session = Depends(get_session)):
+    projects: list[Project] = session.exec(select(Project)).all()
+    return projects

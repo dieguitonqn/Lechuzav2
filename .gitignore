@@ -24,3 +24,6 @@ __pycache__/
 # Ignorar otros archivos
 *.drawio
 *.txt
+
+# Ignorar archivos subidos por el usuario
+files/

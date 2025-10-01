@@ -1,9 +1,7 @@
 from typing import List, Optional
 import uuid
 from datetime import datetime
-from sqlalchemy import Column
-from sqlalchemy.types import JSON
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Relationship
 
 
     
@@ -12,8 +10,8 @@ class Transmittal_NP(SQLModel, table=True):
     project_id: uuid.UUID = Field(foreign_key="project.id")
     codigo: str
     fecha_emision: datetime = Field(default_factory=datetime.now)
-    asunto: Optional[str] = None
-    enviado_a: Optional[List[str]] = Field(default=None, sa_column=Column(JSON))
-    copias_a: Optional[List[str]] = Field(default=None, sa_column=Column(JSON))
-    comentarios: Optional[str] = None
-    documents: Optional[List[uuid.UUID]] = Field(default=None, sa_column=Column(JSON))  # Lista de IDs de documentos
+    asunto: Optional[str] = Field(default="")
+    comentarios: Optional[str] = Field(default="")
+    ttal_np_file:str = Field(default="")  # Ruta o nombre del archivo asociado al TTAL-NP
+
+    documents: Optional["Document"] = Relationship(back_populates="ttal_np")

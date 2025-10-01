@@ -27,7 +27,6 @@ class Project(SQLModel, table=True):
     )
     company_id: Optional[uuid.UUID] = Field(default=None, foreign_key="company.id")
     companies: List["Company"] = Relationship(back_populates="projects")
-    document_ids: Optional[List[uuid.UUID]] = Field(default=None, sa_column=Column(JSON))
     documents: List["Document"] = Relationship(back_populates="project")
     contrato:Optional[str] = None
     contrato_url:Optional[str] = None
