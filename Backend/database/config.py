@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     database_url: str
 
     model_config = SettingsConfigDict(
-        env_file=".env", #lugar en donde se encuentra el archivo .env
+        env_file=".env",    #lugar en donde se encuentra el archivo .env
         extra="ignore"      # Ignorar variables no definidas en el modelo Settings. En este caso, solo "cargar" la variable database_url
         )
 

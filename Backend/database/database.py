@@ -1,6 +1,6 @@
 from typing import Generator
 from sqlmodel import create_engine, Session
-from config import settings
+from database.config import settings
 
 # Configura el engine de SQLModel(SQLAlchemy) para PostgreSQL
 

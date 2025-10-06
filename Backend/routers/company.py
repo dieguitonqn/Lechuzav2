@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Cookie
 from typing import Annotated
 from sqlmodel import Session, select
 import jwt
-from database import get_session
+from Backend.database.database import get_session
 from models.companies import Company
 from models.users import User
 

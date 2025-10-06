@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 
 from models.users import User,UserCreate
-from database import get_session
+from Backend.database.database import get_session
 
 users = APIRouter()
 
