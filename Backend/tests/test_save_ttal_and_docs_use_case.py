@@ -1,8 +1,10 @@
 import pytest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from core.use_cases.save_ttal_and_docs_use_case import SaveTtalAndDocsUseCase
 from core.dtos.ttal_np_documents import TtalNpDTO, DocumentDataDTO
 from models.ttals_nps import Transmittal_NP
+from infrastructure.repositories.document_repo import SQLModelDocumentRepository
+from models.documents import Document
 
 class DummyFileManager:
     def save_ttal(self, file_data, destination_path):
@@ -27,6 +29,8 @@ def use_case():
     )
 
 def test_execute_success(use_case):
+    mock_document_repo = patch('infrastructure.repositories.document_repo.SQLModelDocumentRepository', autospec=True)
+    mock_document_repo.return_value.create_document = Document(id=1, codigo="DOC-001", nombre="Documento 1", revision="A", document_file="doc_file_1", project_id="1234", ttal_np_id=1)
     ttal_dto = TtalNpDTO(
         project_id="1234",
         ttal_np_file="ttal_file",

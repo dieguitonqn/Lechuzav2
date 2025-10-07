@@ -32,3 +32,5 @@ class Document(SQLModel, table=True):
     # Relación con el proyecto al que pertenece
     project_id: uuid.UUID = Field(foreign_key="project.id")
     project: "Project" = Relationship(back_populates="documents")
+
+    from models.ttals_nps import Transmittal_NP

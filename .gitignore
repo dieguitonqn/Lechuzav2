@@ -1,6 +1,5 @@
 
 # Ignorar directorios de módulos y entornos virtuales
-compose.yaml
 README.md
 .env
 **/node_modules/
@@ -23,7 +22,7 @@ __pycache__/
 
 # Ignorar otros archivos
 *.drawio
-*.txt
+
 
 # Ignorar archivos subidos por el usuario
 files/

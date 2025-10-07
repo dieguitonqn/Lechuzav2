@@ -1,3 +1,4 @@
+import uuid
 from sqlmodel import Session
 from core.interfaces.documents import IDocumentRepository
 from database.database import get_session
@@ -13,7 +14,7 @@ class SQLModelDocumentRepository(IDocumentRepository):
                               revision: str, 
                               document_file: str, 
                               project_id: str,
-                              ttal_np_id: str = None):
+                              ttal_np_id: uuid.UUID = None):
         document_db = Document(
             codigo=codigo,
             nombre=nombre,

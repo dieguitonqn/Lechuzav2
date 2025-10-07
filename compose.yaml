@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    container_name: postgres_db
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  adminer:
+    image: adminer
+    container_name: adminer_ui
+    restart: always
+    ports:
+      - "8082:8080"
+    depends_on:
+      - db
+    networks:
+      - app_network
+
+    
+  # backend:
+  #   build:
+  #     context: .
+  #     dockerfile: ./Backend/Dockerfile
+  #   container_name: back01
+  #   restart: always
+  #   ports:
+  #     - "8000:8000"
+  #   env_file:
+  #     - Backend/.env
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - app_network
+
+  # frontend:
+  #   build:
+  #     context: ./Frontend/task_organizer
+  #     dockerfile: Dockerfile
+  #   container_name: frontend01
+  #   restart: always
+  #   ports:
+  #     - "3000:3000"
+  #   env_file:
+  #     - Frontend/task_organizer/.env.local
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - app_network
+
+volumes:
+  postgres_data:
+
+networks:
+  app_network:
+    driver: bridge
