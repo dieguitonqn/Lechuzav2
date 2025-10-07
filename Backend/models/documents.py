@@ -5,6 +5,7 @@ from sqlmodel import Field, SQLModel, Relationship
 # from models.projects import Project  # Importa la clase Project para las relaciones
 from models.statuses import Status  # Importa la clase Status para las relaciones
 from models.correction_reports import CorrectionReport  # Importa la clase CorrectionReport para las relaciones
+from models.ttals_nps import Transmittal_NP  # Importa la clase Transmittal_NP para las relaciones
 
 
 class Document(SQLModel, table=True):
@@ -33,4 +34,4 @@ class Document(SQLModel, table=True):
     project_id: uuid.UUID = Field(foreign_key="project.id")
     project: "Project" = Relationship(back_populates="documents")
 
-    from models.ttals_nps import Transmittal_NP
+from models.projects import Project

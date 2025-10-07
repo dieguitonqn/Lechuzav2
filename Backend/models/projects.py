@@ -40,4 +40,5 @@ class ProjectCreate(BaseModel):
     contract_file: UploadFile = File(...)
     contract: str = Form(None)
 
-    
+from models.users import User
+from models.companies import Company

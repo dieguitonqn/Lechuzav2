@@ -8,20 +8,20 @@ from sqlmodel import Session
 
 @pytest.fixture
 def document_repo():
-    session:Session=get_session()
+    session:Session=next(get_session())
     return SQLModelDocumentRepository(session)
 
 def test_create_document_success(document_repo):
-   
-    document = Document(
-        codigo="DOC-001",
-        nombre="Documento 1",
-        revision="A",
-        document_file="doc_file_1",
-        project_id="1234",
-        ttal_np_id=None
+
+
+    result = document_repo.create_document(
+        codigo = 'DOC-001',
+        nombre = 'Documento 1',
+        revision = 'A',
+        document_file = 'path/to/document.pdf   ',
+        project_id = '123e4567-e89b-12d3-a456-426614174000',
+        ttal_np_id= '123e4567-e89b-12d3-a456-426614174001'
     )
-    result = document_repo.create_document(document)
 
     assert result is not None
     assert result.id is not None

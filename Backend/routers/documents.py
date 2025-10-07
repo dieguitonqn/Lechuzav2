@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 from typing import List
 import uuid
 from models.documents import Document
-from Backend.database.database import get_session
+from database.database import get_session
 from pathlib import Path
 
 

@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Response, status, Cookie, Request, UploadFile, File, Form
 from models.users import User
 from models.projects import ProjectCreate, Project
-from Backend.database.database import get_session, Session
+from database.database import get_session, Session
 # from auth import SECRET_KEY, ALGORITHM, create_access_token
 import jwt
 from sqlmodel import Session, select

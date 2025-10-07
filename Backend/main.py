@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from sqlmodel import Session, select
-from Backend.database.database import create_db_and_tables, engine
+from database.database import create_db_and_tables, engine
 from routers import users, auth, company, projects, documents, ttal_np
 from routers.auth import crypt
 

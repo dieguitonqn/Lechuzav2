@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlmodel import Session, select
 from models.users import User, UserCreate
-from Backend.database.database import get_session
+from database.database import get_session
 
 from fastapi.security import OAuth2PasswordBearer
 import jwt

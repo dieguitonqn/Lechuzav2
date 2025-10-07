@@ -4,7 +4,7 @@ from typing import List
 from sqlmodel import Session, select
 import uuid
 from models.ttals_nps import Transmittal_NP
-from Backend.database.database import get_session
+from database.database import get_session
 
 
 ttal_np = APIRouter( tags=["transmittal_np"])

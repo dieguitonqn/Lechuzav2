@@ -9,7 +9,7 @@ class SQLModelDocumentRepository(IDocumentRepository):
     def __init__(self, session: Session = get_session()):
         self.session = session
 
-    async def create_document(self, codigo: str, 
+    def create_document(self, codigo: str, 
                               nombre: str, 
                               revision: str, 
                               document_file: str, 
@@ -21,7 +21,8 @@ class SQLModelDocumentRepository(IDocumentRepository):
             revision=revision,
             document_file=document_file,
             project_id=project_id,
-            ttal_np_id=ttal_np_id
+            ttal_np_id=ttal_np_id,
+            estado_id=1  # Asignar un estado por defecto (por ejemplo, "Nuevo" con id=1
         )
         try:
             self.session.add(document_db)
