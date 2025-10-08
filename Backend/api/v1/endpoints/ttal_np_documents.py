@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form, UploadFile, File
 from typing import List
-from Backend.core.use_cases.save_ttal_and_docs_use_case import SaveTtalAndDocsUseCase
-from Backend.core.dtos.ttal_np_documents import TtalNpDTO, DocumentDataDTO
-from Backend.api.v1.dependencies.get_save_ttal_docs_uc import get_save_ttal_and_docs_uc
+from core.use_cases.save_ttal_and_docs_use_case import SaveTtalAndDocsUseCase
+from core.dtos.ttal_np_documents import TtalNpDTO, DocumentDataDTO
+from api.v1.dependencies.get_save_ttal_docs_uc import get_save_ttal_and_docs_uc
 
 ttal_documents = APIRouter( prefix="/ttal-docs",tags=["transmittal_documents"])
 

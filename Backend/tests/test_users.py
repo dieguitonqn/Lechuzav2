@@ -11,7 +11,6 @@ def test_create_user():
     user_data = {
         'email': "prueba6@email.com",
         'password': "password123",
-        'google_id': None  # google_id is optional
     }
     resp = client.post("/api/user/create", json=user_data)
     assert resp.status_code == 201
@@ -20,7 +19,6 @@ def test_create_user():
         'id': response_data.get('id'),
         'name': None,
         'email': user_data['email'],
-        'google_id': user_data['google_id'],
         'is_active': True,
         'is_verified': False,
         'is_admin': False

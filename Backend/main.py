@@ -7,6 +7,8 @@ from sqlmodel import Session, select
 from database.database import create_db_and_tables, engine
 from routers import users, auth, company, projects, documents, ttal_np
 from routers.auth import crypt
+from models.users import User
+from api.v1.routers import router
 
 
 
@@ -21,40 +23,39 @@ async def lifespan(app: FastAPI):
     
         # 3. Verificamos si el usuario administrador por defecto ya existe.
         # Esto evita el error de UniqueViolation al reiniciar la aplicación.
-        # statement = select(User).where(User.email == "admin@email.com")
-        # existing_admin = session.exec(statement).first()
+        statement = select(User).where(User.email == "admin@email.com")
+        existing_admin = session.exec(statement).first()
 
         # # 4. Si el usuario NO existe, lo creamos.
         # # Esta es la corrección principal, la condición `if not existing_admin`.
-        # if not existing_admin:
-        #     print("Creando usuario administrador por defecto...")
+        if not existing_admin:
+            print("Creando usuario administrador por defecto...")
 
-        #     # Es crucial hashear la contraseña antes de guardarla.
-        #     # `hash_password` es una función asumida.
-        #     # hashed_password = hash_password("admin-password")
+            # Es crucial hashear la contraseña antes de guardarla.
+            # `hash_password` es una función asumida.
+            # hashed_password = hash_password("admin-password")
 
-        #     user_admin_default = User(
-        #         name="Admin",
-        #         email="admin@email.com",
-        #         google_id="admin-google-id",
-        #         # Guarda la contraseña hasheada, no en texto plano.
-        #         # password="$2y$12$Xqb.PwbPpnzqxJ/tAKEnruwkPDuq7fAUu8TzhY28uL/iN6KjEa1Gi", #admin-password
-        #         password=crypt.hash("admin-password"),  # Hasheamos la contraseña
-        #         is_active=True,
-        #         is_verified=True,
-        #         is_admin=True
-        #     )
+            user_admin_default = User(
+                name="Admin",
+                email="admin@email.com",
+                # Guarda la contraseña hasheada, no en texto plano.
+                # password="$2y$12$Xqb.PwbPpnzqxJ/tAKEnruwkPDuq7fAUu8TzhY28uL/iN6KjEa1Gi", #admin-password
+                password_hash=crypt.hash("admin-password"),  # Hasheamos la contraseña
+                is_active=True,
+                is_verified=True,
+                is_admin=True
+            )
 
-        #     # 5. Lo agregamos a la sesión y hacemos commit para guardarlo en la DB.
-        #     session.add(user_admin_default)
-        #     session.commit()
+            # 5. Lo agregamos a la sesión y hacemos commit para guardarlo en la DB.
+            session.add(user_admin_default)
+            session.commit()
 
-        #     # 6. Refrescamos el objeto para obtener su ID y otros valores por defecto.
-        #     session.refresh(user_admin_default)
+            # 6. Refrescamos el objeto para obtener su ID y otros valores por defecto.
+            session.refresh(user_admin_default)
 
-        #     print(f"Usuario administrador por defecto creado: {user_admin_default.email}")
-        # else:
-        #     print("El usuario administrador por defecto ya existe. Omitiendo la creación.")
+            print(f"Usuario administrador por defecto creado: {user_admin_default.email}")
+        else:
+            print("El usuario administrador por defecto ya existe. Omitiendo la creación.")
 
         yield #Yield es para que FastAPI pueda iniciar y ejecutar la aplicación
     # Here you could add any cleanup code if needed
@@ -64,7 +65,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # Routers
-
+app.include_router(router, prefix="/api/v1", tags=["v1"])
 
 # app.include_router(users.users, prefix="/api", tags=["users"])
 # app.include_router(auth.router, prefix="/api", tags=["auth"])

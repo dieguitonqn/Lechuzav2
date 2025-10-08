@@ -34,4 +34,4 @@ class Document(SQLModel, table=True):
     project_id: uuid.UUID = Field(foreign_key="project.id")
     project: "Project" = Relationship(back_populates="documents")
 
-from models.projects import Project
+# from models.projects import Project
