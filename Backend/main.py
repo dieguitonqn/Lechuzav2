@@ -89,7 +89,7 @@ app.add_middleware(
     expose_headers=["Set-Cookie"],  # Importante para manejar cookies
 )
 
-# Main endpoint
-@app.get("/")
-def main():
-    return {"message": "Hello World"}
+# # Main endpoint
+# @app.get("/")
+# def main():
+#     return {"message": "Hello World"}

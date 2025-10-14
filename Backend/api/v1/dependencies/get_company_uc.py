@@ -6,6 +6,6 @@ from sqlmodel import Session
 from infrastructure.repositories.company_repo import SQLModelCompanyRepository
 
 
-def get_company_uc(session: Session=Depends(get_session)) -> CompanyUseCase:
+def get_company_uc(session: Session=Depends(get_session)):
     company_repository = SQLModelCompanyRepository(session)
     return CompanyUseCase(company_repository)

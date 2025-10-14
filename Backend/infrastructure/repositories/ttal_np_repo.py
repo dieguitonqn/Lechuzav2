@@ -9,7 +9,7 @@ class SQLModelTtalNpRepository(ITtalNpRepository):
     def __init__(self, session: Session = get_session()):
         self.session = session
 
-    async def create_ttal_np(self, project_id: str, codigo: str, asunto: str, ttal_np_file: str):
+    def create_ttal_np(self, project_id: str, codigo: str, asunto: str, ttal_np_file: str):
         ttal_np_db = Transmittal_NP(
             project_id=project_id,
             codigo=codigo,

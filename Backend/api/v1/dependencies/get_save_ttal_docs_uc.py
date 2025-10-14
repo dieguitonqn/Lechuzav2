@@ -1,10 +1,10 @@
 from database.database import get_session
 from fastapi import Depends
 from sqlmodel import Session
-from core.use_cases.save_ttal_and_docs_use_case import SaveTtalAndDocsUseCase
+from core.use_cases.ttal_and_docs_uc import SaveTtalAndDocsUseCase
 
-def get_save_ttal_and_docs_uc(session: Session = Depends(get_session))->SaveTtalAndDocsUseCase:
-    from core.use_cases.save_ttal_and_docs_use_case import SaveTtalAndDocsUseCase
+def get_save_ttal_and_docs_uc(session: Session = Depends(get_session)):
+    from core.use_cases.ttal_and_docs_uc import SaveTtalAndDocsUseCase
     from infrastructure.repositories.ttal_np_repo import SQLModelTtalNpRepository
     from infrastructure.repositories.document_repo import SQLModelDocumentRepository
     from infrastructure.storage.file_managment_repo import FileManager

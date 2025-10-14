@@ -31,7 +31,7 @@ class Document(SQLModel, table=True):
     ttal_np: Optional["Transmittal_NP"] = Relationship(back_populates="documents")
 
     # Relación con el proyecto al que pertenece
-    project_id: uuid.UUID = Field(foreign_key="project.id")
+    project_id: uuid.UUID = Field(foreign_key="project.id", index=True)
     project: "Project" = Relationship(back_populates="documents")
 
 # from models.projects import Project

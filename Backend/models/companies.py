@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship
 from models.projects import Project  # Importa la clase Project para las relaciones
+from pydantic import BaseModel
 
 
 
@@ -13,3 +14,8 @@ class Company(SQLModel, table=True):
     # Relación a los proyectos a través de la tabla intermedia
     projects: Optional[List["Project"]] = Relationship(back_populates="companies")
     users: Optional[List["User"]] = Relationship(back_populates="company")
+
+
+class CompanyEndpoint(BaseModel):
+    name: str
+    code: str

@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form, UploadFile, File
 from typing import List
-from core.use_cases.save_ttal_and_docs_use_case import SaveTtalAndDocsUseCase
+from core.use_cases.ttal_and_docs_uc import SaveTtalAndDocsUseCase
 from core.dtos.ttal_np_documents import TtalNpDTO, DocumentDataDTO
 from api.v1.dependencies.get_save_ttal_docs_uc import get_save_ttal_and_docs_uc
 
-ttal_documents = APIRouter( prefix="/ttal-docs",tags=["transmittal_documents"])
+ttal_documents = APIRouter( prefix="/ttal-docs")
 
 @ttal_documents.post("/", status_code=status.HTTP_200_OK)
 async def upload_ttal_document(

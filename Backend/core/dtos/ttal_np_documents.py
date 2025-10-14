@@ -22,10 +22,10 @@ class TtalNpDTO:
                  ttal_np_code:str, 
                  ttal_np_file:UploadFile,
                  ttal_np_description:str, 
-                 documents:DocumentDataDTO):
+                 documents:list[DocumentDataDTO]):
         
         self.project_id = project_id
         self.ttal_np_code = ttal_np_code
         self.ttal_np_file = ttal_np_file
         self.ttal_np_description = ttal_np_description
-        self.documents: list[DocumentDataDTO] = [documents]
+        self.documents = documents

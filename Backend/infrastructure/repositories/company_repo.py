@@ -5,10 +5,10 @@ from database.database import get_session
 class SQLModelCompanyRepository(ICompany):
     def __init__(self, session:Session=get_session):
         self.session = session
-        
+
     def create_company(self, name: str, codigo: str):
         from models.companies import Company  # Importar aquí para evitar dependencias circulares
-        company_db = Company(name=name, codigo=codigo)
+        company_db = Company(nombre=name, codigo=codigo)
         try:
             self.session.add(company_db)
             self.session.commit()

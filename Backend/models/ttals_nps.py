@@ -8,7 +8,7 @@ from sqlmodel import Field, SQLModel, Relationship
 class Transmittal_NP(SQLModel, table=True):
     id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
     project_id: uuid.UUID = Field(foreign_key="project.id")
-    codigo: str
+    codigo: str = Field(unique=True, index=True)
     fecha_emision: datetime = Field(default_factory=datetime.now)
     asunto: Optional[str] = Field(default="")
     comentarios: Optional[str] = Field(default="")
