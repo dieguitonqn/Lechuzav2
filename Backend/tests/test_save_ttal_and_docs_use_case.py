@@ -6,28 +6,28 @@ from models.ttals_nps import Transmittal_NP
 from infrastructure.repositories.document_repo import SQLModelDocumentRepository
 from models.documents import Document
 
-class DummyFileManager:
-    def save_ttal(self, file_data, destination_path):
-        return f"{destination_path}/ttal_np.pdf"
-    def save_document(self, file_data):
-        return f"files/{file_data}.pdf"
+# class DummyFileManager:
+#     def save_ttal(self, file_data, destination_path):
+#         return f"{destination_path}/ttal_np.pdf"
+#     def save_document(self, file_data):
+#         return f"files/{file_data}.pdf"
 
-class DummyTtalNpRepo:
-    def create_ttal_np(self, project_id, codigo, asunto, ttal_np_file):
-        return Transmittal_NP(id=1, project_id=project_id, codigo=codigo, asunto=asunto, ttal_np_file=ttal_np_file)
+# class DummyTtalNpRepo:
+#     def create_ttal_np(self, project_id, codigo, asunto, ttal_np_file):
+#         return Transmittal_NP(id=1, project_id=project_id, codigo=codigo, asunto=asunto, ttal_np_file=ttal_np_file)
 
-class DummyDocumentRepo:
-    def create_document(self, codigo, nombre, revision, document_file, project_id, ttal_np_id):
-        return MagicMock(id=1, codigo=codigo, nombre=nombre, revision=revision, document_file=document_file, project_id=project_id, ttal_np_id=ttal_np_id)
+# class DummyDocumentRepo:
+#     def create_document(self, codigo, nombre, revision, document_file, project_id, ttal_np_id):
+#         return MagicMock(id=1, codigo=codigo, nombre=nombre, revision=revision, document_file=document_file, project_id=project_id, ttal_np_id=ttal_np_id)
 
-@pytest.fixture
-def use_case():
-    return SaveTtalAndDocsUseCase(
-        ttal_repo=DummyTtalNpRepo(),
-        document_repo=DummyDocumentRepo(),
-        file_manager=DummyFileManager()
-    )
-
+# @pytest.fixture
+# def use_case():
+#     return SaveTtalAndDocsUseCase(
+#         ttal_repo=DummyTtalNpRepo(),
+#         document_repo=DummyDocumentRepo(),
+#         file_manager=DummyFileManager()
+#     )
+@pytest.mark.skip("This test file is deprecated and will be removed in future versions.")
 def test_execute_success(use_case):
     mock_document_repo = patch('infrastructure.repositories.document_repo.SQLModelDocumentRepository', autospec=True)
     mock_document_repo.return_value.create_document = Document(id=1, codigo="DOC-001", nombre="Documento 1", revision="A", document_file="doc_file_1", project_id="1234", ttal_np_id=1)

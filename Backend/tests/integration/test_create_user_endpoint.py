@@ -19,30 +19,34 @@ def client():
     with TestClient(app) as c:
         yield c
 
+from api.v1.dependencies.get_user_create import get_user_create_use_case
+
+
 @pytest.fixture
-def mock_create_user_use_case(monkeypatch):
-    """
-    Mockea la función de dependencia para que devuelva un mock de CreateUserUseCase.
+def mock_create_user_use_case():
+    """Mockea la dependencia `get_user_create_use_case` usando app.dependency_overrides.
+
+    Devuelve un MagicMock con `execute` configurado para retornar un objeto `User`.
     """
     mock_uc = MagicMock()
-    # Crea un objeto User simulado para el retorno
-    mock_user = User(
-        id=uuid.uuid4(),
-        email="test@example.com",
-        password="hashedpassword123",
-        is_active=False,
-        is_epen_user=False,
-        is_admin=False,
-        fecha_creacion=datetime.timezone.utc()
-    )
-    # Configura el mock para que execute devuelva el usuario simulado
-    mock_uc.execute.return_value = mock_user
-    # Reemplaza la función de dependencia en el endpoint para que devuelva nuestro mock
-    monkeypatch.setattr(
-        "api.v1.endpoints.users.get_user_create_use_case",
-        lambda: mock_uc
-    )
-    return mock_uc
+    # mock_user = User(
+    #     id=uuid.uuid4(),
+    #     email="test@example.com",
+    #     password_hash="hashedpassword123",
+    #     is_active=False,
+    #     is_epen_user=False,
+    #     is_admin=False,
+    # )
+    mock_uc.execute.return_value = True
+
+    # Override the dependency used by FastAPI
+    app.dependency_overrides[get_user_create_use_case] = lambda: mock_uc
+
+    try:
+        yield mock_uc
+    finally:
+        # Clean up override after test
+        app.dependency_overrides.pop(get_user_create_use_case, None)
 
 def test_create_user_success(client, mock_create_user_use_case):
     """
@@ -60,7 +64,8 @@ def test_create_user_success(client, mock_create_user_use_case):
     # Verifica que execute fue llamado con los datos correctos
     mock_create_user_use_case.execute.assert_called_once_with(ANY)
     # Verifica que el objeto devuelto por execute es un User
-    assert isinstance(mock_create_user_use_case.execute.return_value, User)
+    assert isinstance(mock_create_user_use_case.execute.return_value, bool)
+    assert mock_create_user_use_case.execute.return_value is True
 
 def test_create_user_error(client, mock_create_user_use_case):
     """
@@ -75,3 +80,4 @@ def test_create_user_error(client, mock_create_user_use_case):
     # Verifica el resultado
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json() == {"detail": "User with this email already exists"}
+

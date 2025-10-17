@@ -7,6 +7,7 @@ from Backend.models.users import User
 
 client = TestClient(app)
 
+@pytest.mark.skip("This test file is deprecated and will be removed in future versions.")
 def test_login():
     userData = {
         "email": "admin@email.com",

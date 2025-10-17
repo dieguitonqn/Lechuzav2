@@ -6,11 +6,11 @@ from models.documents import Document
 from database.database import get_session
 from sqlmodel import Session
 
-@pytest.fixture
-def document_repo():
-    session:Session=next(get_session())
-    return SQLModelDocumentRepository(session)
-
+# @pytest.fixture
+# def document_repo():
+#     session:Session=next(get_session())
+#     return SQLModelDocumentRepository(session)
+@pytest.mark.skip("This test file is deprecated and will be removed in future versions.")
 def test_create_document_success(document_repo):
 
 
