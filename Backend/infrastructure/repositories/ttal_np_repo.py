@@ -1,7 +1,7 @@
-from core.interfaces.ttal_np import ITtalNpRepository
-from database.database import get_session
+from domain.interfaces.ttal_np import ITtalNpRepository
+from infrastructure.database.database import get_session
 from sqlmodel import Session
-from models.ttals_nps import Transmittal_NP
+from domain.entities.ttals_nps import Transmittal_NP
 
 
 class SQLModelTtalNpRepository(ITtalNpRepository):

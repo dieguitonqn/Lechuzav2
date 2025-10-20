@@ -1,7 +1,7 @@
 from sqlmodel import Session, select
-from core.dtos.projects_dto import ProjectCreateDTO
-from core.interfaces.projects_inteface import IProject
-from models.projects import Project
+from application.dtos.projects_dto import ProjectCreateDTO
+from domain.interfaces.projects_inteface import IProject
+from domain.entities.projects import Project
 
 class SQLModelProjectRepository(IProject):
     def __init__(self, session: Session):

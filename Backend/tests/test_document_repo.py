@@ -2,8 +2,8 @@ from infrastructure.repositories.document_repo import SQLModelDocumentRepository
 
 from unittest.mock import patch
 import pytest
-from models.documents import Document
-from database.database import get_session
+from domain.entities.documents import Document
+from infrastructure.database.database import get_session
 from sqlmodel import Session
 
 # @pytest.fixture

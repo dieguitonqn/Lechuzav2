@@ -3,8 +3,8 @@ from fastapi.testclient import TestClient
 from fastapi import status
 from unittest.mock import MagicMock, ANY
 from main import app
-from api.v1.endpoints.users import users
-from models.users import User
+from presentation.api.v1.endpoints.users import users
+from domain.entities.users import User
 import uuid
 from datetime import datetime
 
@@ -19,7 +19,7 @@ def client():
     with TestClient(app) as c:
         yield c
 
-from api.v1.dependencies.get_user_create import get_user_create_use_case
+from presentation.api.v1.dependencies.get_user_create import get_user_create_use_case
 
 
 @pytest.fixture

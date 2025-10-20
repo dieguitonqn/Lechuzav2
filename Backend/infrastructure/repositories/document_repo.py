@@ -1,8 +1,8 @@
 import uuid
 from sqlmodel import Session
-from core.interfaces.documents import IDocumentRepository
-from database.database import get_session
-from models.documents import Document
+from domain.interfaces.documents import IDocumentRepository
+from infrastructure.database.database import get_session
+from domain.entities.documents import Document
 
 class SQLModelDocumentRepository(IDocumentRepository):
 

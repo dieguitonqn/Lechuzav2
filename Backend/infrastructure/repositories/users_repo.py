@@ -1,6 +1,6 @@
 from sqlmodel import Session
-from core.interfaces.users import IUserRepository
-from models.users import User
+from domain.interfaces.users import IUserRepository
+from domain.entities.users import User
 from typing import List, Optional
 from sqlmodel import select
 

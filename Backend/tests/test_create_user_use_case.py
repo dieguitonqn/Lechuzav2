@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
-from core.use_cases.users_uc import CreateUserUseCase
-from core.dtos.users_dto import UserCreateDTO
+from application.use_cases.users_uc import CreateUserUseCase
+from application.dtos.users_dto import UserCreateDTO
 
 # @pytest.fixture
 # def user_repo():

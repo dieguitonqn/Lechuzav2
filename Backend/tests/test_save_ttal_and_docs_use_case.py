@@ -1,10 +1,10 @@
 import pytest
 from unittest.mock import MagicMock, patch
 from Backend.core.use_cases.ttal_and_docs_uc import SaveTtalAndDocsUseCase
-from core.dtos.ttal_np_documents import TtalNpDTO, DocumentDataDTO
-from models.ttals_nps import Transmittal_NP
+from application.dtos.ttal_np_documents import TtalNpDTO, DocumentDataDTO
+from domain.entities.ttals_nps import Transmittal_NP
 from infrastructure.repositories.document_repo import SQLModelDocumentRepository
-from models.documents import Document
+from domain.entities.documents import Document
 
 # class DummyFileManager:
 #     def save_ttal(self, file_data, destination_path):

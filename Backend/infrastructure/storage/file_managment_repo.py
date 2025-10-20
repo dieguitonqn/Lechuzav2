@@ -1,4 +1,4 @@
-from core.interfaces.file_management import IFileManager
+from domain.interfaces.file_management import IFileManager
 from fastapi import UploadFile
 from pathlib import Path
 import os
