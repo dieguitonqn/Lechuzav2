@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from fastapi import status, UploadFile
 from unittest.mock import MagicMock
 from presentation.api.v1.endpoints.projects import projects
-from domain.entities.projects import Project
+
 
 
 @pytest.fixture

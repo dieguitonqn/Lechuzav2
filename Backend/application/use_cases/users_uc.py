@@ -20,4 +20,4 @@ class CreateUserUseCase:
         # Save the new user to the repository
         created_user = self.user_repository.create_user(user_create_dto.email, user_create_dto.password)
 
-        return created_user != None and created_user
+        return created_user is not None and created_user

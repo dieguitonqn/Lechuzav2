@@ -1,6 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Response, status, Cookie, Request
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from pydantic import BaseModel
 from sqlmodel import Session, select
 from domain.entities.users import User, UserCreate

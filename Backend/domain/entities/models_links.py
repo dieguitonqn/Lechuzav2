@@ -1,4 +1,3 @@
-from typing import List, Optional
 import uuid
 from sqlmodel import Field, SQLModel
 

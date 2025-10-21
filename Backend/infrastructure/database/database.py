@@ -1,5 +1,5 @@
-from typing import Generator
-from sqlmodel import create_engine, Session
+
+from sqlmodel import create_engine, Session, SQLModel
 from infrastructure.database.config import settings
 
 # Configura el engine de SQLModel(SQLAlchemy) para PostgreSQL
@@ -8,16 +8,22 @@ from infrastructure.database.config import settings
 engine = create_engine(settings.database_url, echo=True, pool_recycle=3600) # echo=True para ver las queries SQL en consola
 
 def create_db_and_tables():
-    # Se crean las tablas en la base de datos en modo development
-    from domain.entities.users import SQLModel             # Importa los modelos del archivo models.py para que SQLModel los use para hacer las tablas
-    from domain.entities.projects import SQLModel
-    from domain.entities.companies import SQLModel
-    from domain.entities.documents import SQLModel
-    from domain.entities.statuses import SQLModel
-    from domain.entities.correction_reports import SQLModel
-    from domain.entities.models_links import SQLModel
-    from domain.entities.ttals_nps import SQLModel
-    SQLModel.metadata.create_all(engine)    # Crea las tablas en la base de datos si no existen. Si existen, no hace nada.
+    """
+    Crea las tablas en la base de datos importando todos los modelos.
+    Los imports están dentro de la función para evitar imports circulares.
+    """
+    # Importar las clases de modelo para que SQLModel las registre
+    from domain.entities.users import User
+    from domain.entities.projects import Project
+    from domain.entities.companies import Company
+    from domain.entities.documents import Document
+    from domain.entities.statuses import Status
+    from domain.entities.correction_reports import CorrectionReport
+    from domain.entities.models_links import ProjectUserLink
+    from domain.entities.ttals_nps import Transmittal_NP
+    
+    # Crear las tablas basándose en los modelos importados
+    SQLModel.metadata.create_all(engine)
 
     # Para producción se utiliza Alembic para manejar las migraciones de la base de datos
 

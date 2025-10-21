@@ -17,7 +17,7 @@ async def create_user(
                              is_active=False, is_epen_user=False, is_admin=False)
 
     try:
-        user_db = users_use_case.execute(user_dto)
+        users_use_case.execute(user_dto)
         return {"message": "User created successfully"}
     except ValueError as e:
         raise HTTPException(

@@ -1,6 +1,4 @@
-from fastapi import Depends, APIRouter, HTTPException, UploadFile, status, Form, File, UploadFile
-from sqlmodel import Session
-from typing import List
+from fastapi import Depends, APIRouter, HTTPException, status, Form, File, UploadFile
 from presentation.api.v1.dependencies.get_proyect_uc import get_project_uc
 from application.use_cases.projects_uc import ProjectUseCase
 from application.dtos.projects_dto import ProjectCreateDTO

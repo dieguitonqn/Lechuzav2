@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter, HTTPException, UploadFile, status
+from fastapi import Depends, APIRouter, HTTPException, status
 from presentation.api.v1.dependencies.get_company_uc import get_company_uc
 from application.use_cases.company_uc import CompanyUseCase
 from domain.entities.companies import CompanyEndpoint, Company

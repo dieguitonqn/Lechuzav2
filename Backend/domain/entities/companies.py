@@ -1,6 +1,6 @@
 from typing import List, Optional
 import uuid
-from datetime import datetime
+
 from sqlmodel import Field, SQLModel, Relationship
 from domain.entities.projects import Project  # Importa la clase Project para las relaciones
 from pydantic import BaseModel
