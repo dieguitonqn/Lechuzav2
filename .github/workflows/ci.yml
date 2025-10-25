@@ -21,33 +21,41 @@ jobs:
       with:
         python-version: '3.13'  # Define la versión de Python
 
+    - name: ⚡ Instalar uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: "latest"
+
     - name: 📥 Instalar Dependencias
       run: |
-        python -m pip install --upgrade pip
-        pip install poetry  # Usamos poetry como gestor de dependencias
-        poetry install  # Instala las dependencias de producción y desarrollo (incluyendo tests y linters)
+        cd Backend
+        uv sync  # Instala las dependencias de producción y desarrollo (incluyendo tests y linters)
         
     - name: 📐 Formateo con autopep8 (Verificación)
       # Ejecuta autopep8 solo para verificar si hay cambios de formato pendientes.
       # Si hay cambios no guardados, el CI falla y el desarrollador debe aplicar el formato localmente.
       run: |
-        autopep8 --exit-code --diff --recursive .
+        cd Backend
+        uv run autopep8 --exit-code --diff --recursive .
 
     - name: ⚡ Linting Rápido con ruff
       # Ruff es un linter extremadamente rápido que reemplaza a flake8 y otros.
       run: |
-        ruff check .
+        cd Backend
+        uv run ruff check .
 
     - name: 🔎 Verificación de Tipos con mypy
       # mypy es crucial para FastAPI ya que asegura la consistencia de tipos.
       run: |
-        mypy .
+        cd Backend
+        uv run mypy .
 
     - name: 🧪 Ejecutar Pruebas con pytest
       # Ejecuta todas las pruebas unitarias y de integración.
       # Se asume que las dependencias de la DB de prueba (si las hay) están configuradas.
       run: |
-        pytest
+        cd Backend
+        uv run pytest
         
     # --- Etapa opcional de Construcción de Docker (Fin de CI) ---
 
