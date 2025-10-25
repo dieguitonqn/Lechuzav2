@@ -7,5 +7,8 @@ class CompanyUseCase:
 
     def create_company(self, name: str, codigo: str):
         # Logic to create a company
-        new_company:Company = self.company_repository.create_company(name=name, codigo=codigo)
-        return new_company
+        try:
+            new_company:Company = self.company_repository.create_company(name=name, codigo=codigo)
+            return new_company
+        except Exception as e:
+            raise e

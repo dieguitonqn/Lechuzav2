@@ -75,3 +75,24 @@ def test_create_project(client, ov_get_project_uc):
 
     # Verificar que el mock fue llamado correctamente
     ov_get_project_uc.create_project.assert_called_once()
+
+def test_create_project_excep(client, ov_get_project_uc):
+    ov_get_project_uc.create_project.side_effect = Exception("Error creating project")
+    form_data = {
+        "name": "Loma",
+        "code": "1234",
+        "description": "Aguante Loma",
+        "company_id": str(uuid.uuid4())  # UUID como string
+    }
+
+    input_files = {
+        "project_file": ("primero.pdf", b"Contenido del archivo", "application/pdf")
+    }
+    
+
+    response = client.post('/projects/', data=form_data, files=input_files)
+    assert response.status_code == 400
+
+
+    response_data = response.json()
+    assert response_data["detail"] == "Error creating project"

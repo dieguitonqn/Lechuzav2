@@ -61,3 +61,10 @@ def test_create_company_success(client, ov_get_company_uc):
     
     # Verificar que el mock fue llamado correctamente
     ov_get_company_uc.create_company.assert_called_once_with("TOTAL", "9876")
+
+def test_create_company_failure(client, ov_get_company_uc):
+
+    ov_get_company_uc.create_company.side_effect = Exception("Database error")
+
+    response = client.post("/companies/", json={"name": "TOTAL", "code": "9876"})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST

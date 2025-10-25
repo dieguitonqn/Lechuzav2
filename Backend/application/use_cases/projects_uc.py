@@ -4,7 +4,7 @@ from domain.interfaces.projects_inteface import IProject
 from infrastructure.storage.file_managment_repo import IFileManager
 from domain.entities.projects import Project
 
-class ProjectUseCase():
+class ProjectUseCase:
     def __init__(self, project_repo: IProject, file_manager: IFileManager):
         self.project_repo = project_repo
         self.file_manager = file_manager
