@@ -31,12 +31,12 @@ jobs:
         cd Backend
         uv sync  # Instala las dependencias de producción y desarrollo (incluyendo tests y linters)
         
-    - name: 📐 Formateo con autopep8 (Verificación)
-      # Ejecuta autopep8 solo para verificar si hay cambios de formato pendientes.
+    - name: 📐 Formateo con ruff (Verificación)
+      # Ejecuta ruff format solo para verificar si hay cambios de formato pendientes.
       # Si hay cambios no guardados, el CI falla y el desarrollador debe aplicar el formato localmente.
       run: |
         cd Backend
-        uv run autopep8 --exit-code --diff --recursive .
+        uv run ruff format --check --diff .
 
     - name: ⚡ Linting Rápido con ruff
       # Ruff es un linter extremadamente rápido que reemplaza a flake8 y otros.
