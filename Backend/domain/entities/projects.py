@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 import uuid
 from datetime import datetime
 from fastapi import Form, UploadFile, File
@@ -10,10 +10,10 @@ from domain.entities.models_links import (
 )  # Importa la clase User para las relaciones
 from pydantic import BaseModel
 
-from domain.entities.documents import (
-    Document,
-)  # Importa la clase Document para las relaciones
-# from domain.entities.companies import Company  # Importa la clase Company para las relaciones
+if TYPE_CHECKING:
+    from domain.entities.documents import Document
+    from domain.entities.companies import Company
+    from domain.entities.users import User
 
 
 class Project(SQLModel, table=True):

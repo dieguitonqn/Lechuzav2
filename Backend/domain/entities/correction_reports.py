@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import Column
 from sqlalchemy.types import JSON
 from sqlmodel import Field, Relationship, SQLModel
+from domain.entities.documents import Document
 
 
 class CorrectionReport(SQLModel, table=True):

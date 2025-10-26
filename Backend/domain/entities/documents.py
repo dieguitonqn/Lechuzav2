@@ -1,18 +1,14 @@
 import uuid
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, SQLModel, Relationship
 
-# from domain.entities.projects import Project  # Importa la clase Project para las relaciones
-from domain.entities.statuses import (
-    Status,
-)  # Importa la clase Status para las relaciones
-from domain.entities.correction_reports import (
-    CorrectionReport,
-)  # Importa la clase CorrectionReport para las relaciones
-from domain.entities.ttals_nps import (
-    Transmittal_NP,
-)  # Importa la clase Transmittal_NP para las relaciones
+# Evitar importaciones en tiempo de ejecución que generen ciclos
+if TYPE_CHECKING:
+    from domain.entities.statuses import Status
+    from domain.entities.correction_reports import CorrectionReport
+    from domain.entities.ttals_nps import Transmittal_NP
+    from domain.entities.projects import Project
 
 
 class Document(SQLModel, table=True):
@@ -47,4 +43,4 @@ class Document(SQLModel, table=True):
     project: "Project" = Relationship(back_populates="documents")
 
 
-# from domain.entities.projects import Project
+# Nota: las importaciones de tipos relacionados se resuelven solo para comprobación de tipos

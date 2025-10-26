@@ -1,11 +1,12 @@
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 import uuid
 
 from sqlmodel import Field, SQLModel, Relationship
-from domain.entities.projects import (
-    Project,
-)  # Importa la clase Project para las relaciones
 from pydantic import BaseModel
+
+if TYPE_CHECKING:
+    from domain.entities.projects import Project
+    from domain.entities.users import User
 
 
 class Company(SQLModel, table=True):

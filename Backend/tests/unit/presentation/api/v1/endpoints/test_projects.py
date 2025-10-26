@@ -2,7 +2,7 @@ import uuid
 import pytest
 from main import app
 from fastapi.testclient import TestClient
-from fastapi import status, UploadFile
+from fastapi import status
 from unittest.mock import MagicMock
 from presentation.api.v1.endpoints.projects import projects
 

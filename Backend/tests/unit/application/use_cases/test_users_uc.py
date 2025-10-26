@@ -10,7 +10,6 @@ sys.path.insert(
 
 from application.use_cases.users_uc import CreateUserUseCase
 from application.dtos.users_dto import UserCreateDTO
-from domain.entities.users import User
 
 
 class TestCreateUserUseCase:

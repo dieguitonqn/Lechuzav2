@@ -1,6 +1,9 @@
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 from sqlmodel import Field, SQLModel, Relationship
-# from domain.entities.documents import Document  # Importa la clase Document para las relaciones
+
+# Evitar importaciones en tiempo de ejecución que generen ciclos
+if TYPE_CHECKING:
+    from domain.entities.documents import Document
 
 
 class Status(SQLModel, table=True):

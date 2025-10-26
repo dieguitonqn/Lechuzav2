@@ -1,14 +1,13 @@
 import uuid
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
 from sqlmodel import Field, SQLModel, Relationship
-from domain.entities.companies import Company
 from domain.entities.models_links import (
     ProjectUserLink,
 )  # Importa la tabla intermedia para la relación muchos a muchos
-from domain.entities.projects import (
-    Project,
-)  # Importa la clase Project para las relaciones
+if TYPE_CHECKING:
+    from domain.entities.companies import Company
+    from domain.entities.projects import Project
 
 
 from pydantic import BaseModel
@@ -29,7 +28,7 @@ class User(SQLModel, table=True):
     password_reset_expires: Optional[datetime] = None
 
     company_id: Optional[uuid.UUID] = Field(default=None, foreign_key="company.id")
-    company: Optional[Company] = Relationship(back_populates="users")
+    company: Optional["Company"] = Relationship(back_populates="users")
     # Relación a los proyectos a través de la tabla intermedia. Como es de muchos a muchos, es una lista y no tiene foreign_key
     projects: Optional[List["Project"]] = Relationship(
         back_populates="users", link_model=ProjectUserLink

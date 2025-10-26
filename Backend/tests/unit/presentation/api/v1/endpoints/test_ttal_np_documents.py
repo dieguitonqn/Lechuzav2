@@ -1,8 +1,9 @@
 import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, AsyncMock
 from presentation.api.v1.endpoints.ttal_np_documents import ttal_documents
+from main import app
 
 
 @pytest.fixture
@@ -10,7 +11,7 @@ def client():
     """
     Cliente de prueba que usa la app principal para que los dependency overrides funcionen.
     """
-    from main import app
+    # from main import app
 
     app.include_router(ttal_documents)  # Asegurarse que el router esté incluido
 
@@ -29,12 +30,8 @@ def mock_save_ttal_and_docs_uc():
     return mock_uc
 
 
-import pytest
-import asyncio
-from fastapi.testclient import TestClient
-from fastapi import status
-from unittest.mock import MagicMock, AsyncMock
-from main import app
+
+
 
 
 @pytest.fixture

@@ -14,15 +14,15 @@ def create_db_and_tables():
     Crea las tablas en la base de datos importando todos los modelos.
     Los imports están dentro de la función para evitar imports circulares.
     """
-    # Importar las clases de modelo para que SQLModel las registre
-    from domain.entities.users import User
-    from domain.entities.projects import Project
-    from domain.entities.companies import Company
-    from domain.entities.documents import Document
-    from domain.entities.statuses import Status
-    from domain.entities.correction_reports import CorrectionReport
-    from domain.entities.models_links import ProjectUserLink
-    from domain.entities.ttals_nps import Transmittal_NP
+    # Importar el paquete de entidades para registrar todos los modelos.
+    # Usamos importlib para evitar "unused import" warnings de linters y
+    # para no necesitar listar cada modelo individualmente.
+    import importlib
+
+    # Importa el paquete que a su vez importa/reexporta los modelos
+    # (ver `domain/entities/__init__.py`) — esto provoca los side-effects necesarios
+    # para que SQLModel registre las clases.
+    importlib.import_module("domain.entities")
 
     # Crear las tablas basándose en los modelos importados
     SQLModel.metadata.create_all(engine)
