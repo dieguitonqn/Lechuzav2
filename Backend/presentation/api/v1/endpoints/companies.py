@@ -11,12 +11,12 @@ def create_company(
     company: CompanyEndpoint, company_uc: CompanyUseCase = Depends(get_company_uc)
 ):
     try:
-        company: Company = company_uc.create_company(company.name, company.code)
+        company_db: Company = company_uc.create_company(company.name, company.code)
         return {
             "message": "Company created successfully",
-            "name": company.nombre,
-            "codigo": company.codigo,
-            "id": company.id,
+            "name": company_db.nombre,
+            "codigo": company_db.codigo,
+            "id": company_db.id,
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

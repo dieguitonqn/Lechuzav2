@@ -36,11 +36,11 @@ JWT = NextAuthJWT(
 
 async def verify_password(user: User, password: str):
     print(f"Verifying password for user: {user.email}")
-    print(f"User password: {user.password}")
-    if user.password is None:
+    print(f"User password: {user.password_hash}")
+    if user.password_hash is None:
         return False
 
-    return crypt.verify(password, user.password)
+    return crypt.verify(password, user.password_hash)
 
 
 async def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -115,9 +115,9 @@ async def login(
     print(f"Attempting to log in user: {user_email}")
     print(f"User password: {user_password}")
     statement = select(User).where(User.email == user_email)
-    user = session.exec(statement).first()
+    user_db = session.exec(statement).first()
 
-    if not user:
+    if not user_db:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Invalid authentication credentials",
@@ -129,7 +129,7 @@ async def login(
     #         detail="Inactive user")
 
     # Como el usuario existe, genero un token JWT
-    if not await verify_password(user, user_password):
+    if not await verify_password(user_db, user_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication password",

@@ -1,10 +1,11 @@
 from domain.interfaces.company_interface import ICompany
 from sqlmodel import Session
 from infrastructure.database.database import get_session
+from fastapi import Depends
 
 
 class SQLModelCompanyRepository(ICompany):
-    def __init__(self, session: Session = get_session):
+    def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
     def create_company(self, name: str, codigo: str):

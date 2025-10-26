@@ -1,7 +1,7 @@
 from sqlmodel import Session
 from domain.interfaces.users import IUserRepository
 from domain.entities.users import User
-from typing import List, Optional
+from typing import Sequence, Optional
 from sqlmodel import select
 
 
@@ -36,5 +36,5 @@ class SQLModelUserRepository(IUserRepository):
     def get_user_by_id(self, user_id: str) -> Optional[User]:
         return self.session.get(User, user_id)
 
-    def list_users(self) -> List[User]:
+    def list_users(self) -> Sequence[User]:
         return self.session.exec(select(User)).all()

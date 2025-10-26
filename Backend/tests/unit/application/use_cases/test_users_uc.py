@@ -9,7 +9,7 @@ sys.path.insert(
 )
 
 from application.use_cases.users_uc import CreateUserUseCase
-from application.dtos.users_dto import UserCreateDTO
+from application.dtos.users_create import UserCreateDTO
 
 
 class TestCreateUserUseCase:

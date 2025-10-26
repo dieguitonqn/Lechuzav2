@@ -23,7 +23,7 @@ class SaveTtalAndDocsUseCase:
 
         file_dir = Path("files") / str(ttal_dto.project_id)
         ttal_np_path = await self.file_manager.save_file(
-            file=ttal_dto.ttal_np_file, destination_path=file_dir
+            file=ttal_dto.ttal_np_file, destination_path=str(file_dir)
         )
         if not ttal_np_path:
             raise Exception("Failed to save TTAL-NP file")
@@ -44,7 +44,7 @@ class SaveTtalAndDocsUseCase:
             # document_path = await self.file_manager.save_file(doc_dto.document_file)
             document_dir = Path("files") / doc_dto.project_id
             document_path = await self.file_manager.save_file(
-                file=doc_dto.document_file, destination_path=document_dir
+                file=doc_dto.document_file, destination_path=str(document_dir)
             )
             if not document_path:
                 raise Exception(f"Failed to save document file: {doc_dto.name}")
@@ -54,8 +54,8 @@ class SaveTtalAndDocsUseCase:
                 nombre=doc_dto.name,
                 revision=doc_dto.revision,
                 document_file=document_path,
-                project_id=doc_dto.project_id,
-                ttal_np_id=ttal_np.id,
+                project_id=str(doc_dto.project_id),
+                ttal_np_id=str(ttal_np.id),
             )
             if not document:
                 raise Exception(f"Failed to create document record: {doc_dto.name}")

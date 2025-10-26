@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import Sequence, Optional
 from domain.entities.users import User
 
 
@@ -16,13 +16,13 @@ class IUserRepository(ABC):
         pass
 
     @abstractmethod
-    def get_user_by_email(self, email: str) -> Optional[dict]:
+    def get_user_by_email(self, email: str) -> Optional[User]:
         pass
 
     @abstractmethod
-    def get_user_by_id(self, user_id: str) -> Optional[dict]:
+    def get_user_by_id(self, user_id: str) -> Optional[User]:
         pass
 
     @abstractmethod
-    def list_users(self) -> List[dict]:
+    def list_users(self) -> Sequence[User]:
         pass

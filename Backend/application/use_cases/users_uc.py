@@ -1,5 +1,5 @@
 from domain.interfaces.users import IUserRepository
-from application.dtos.users_dto import UserCreateDTO
+from application.dtos.users_create import UserCreateDTO
 
 
 class CreateUserUseCase:
