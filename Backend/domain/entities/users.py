@@ -5,6 +5,7 @@ from sqlmodel import Field, SQLModel, Relationship
 from domain.entities.models_links import (
     ProjectUserLink,
 )  # Importa la tabla intermedia para la relación muchos a muchos
+
 if TYPE_CHECKING:
     from domain.entities.companies import Company
     from domain.entities.projects import Project

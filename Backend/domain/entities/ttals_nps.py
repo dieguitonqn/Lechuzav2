@@ -2,7 +2,9 @@ from typing import Optional
 import uuid
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship
-from domain.entities.documents import Document  # Importa la clase Document para las relaciones
+from domain.entities.documents import (
+    Document,
+)  # Importa la clase Document para las relaciones
 
 
 class Transmittal_NP(SQLModel, table=True):

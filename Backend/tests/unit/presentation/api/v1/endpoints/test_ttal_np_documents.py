@@ -30,10 +30,6 @@ def mock_save_ttal_and_docs_uc():
     return mock_uc
 
 
-
-
-
-
 @pytest.fixture
 def ov_get_save_ttal_and_docs_uc():
     """Override del Use Case de salvado de transmittal y documentos"""
