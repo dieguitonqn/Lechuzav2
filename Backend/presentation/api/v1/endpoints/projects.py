@@ -27,12 +27,9 @@ async def create_project(
         company_id=company_id,
     )
     try:
-        project:Optional[Project] = await project_uc.create_project(project_dto)
+        project: Optional[Project] = await project_uc.create_project(project_dto)
         if project is None:
-            raise HTTPException(
-                status_code=500, 
-                detail="Failed to create project"
-            )
+            raise HTTPException(status_code=500, detail="Failed to create project")
         return {"message": "Project created successfully", "project": project.id}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
