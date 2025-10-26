@@ -10,16 +10,13 @@ from domain.entities.users import User
 from presentation.api.v1.routers import router
 
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Create the database and tables at startup
-    print ("Creating database and tables...")
-    
+    print("Creating database and tables...")
+
     create_db_and_tables()
     with Session(engine) as session:
-    
-    
         # 3. Verificamos si el usuario administrador por defecto ya existe.
         # Esto evita el error de UniqueViolation al reiniciar la aplicación.
         statement = select(User).where(User.email == "admin@email.com")
@@ -42,7 +39,7 @@ async def lifespan(app: FastAPI):
                 password_hash=crypt.hash("admin-password"),  # Hasheamos la contraseña
                 is_active=True,
                 is_verified=True,
-                is_admin=True
+                is_admin=True,
             )
 
             # 5. Lo agregamos a la sesión y hacemos commit para guardarlo en la DB.
@@ -52,13 +49,16 @@ async def lifespan(app: FastAPI):
             # 6. Refrescamos el objeto para obtener su ID y otros valores por defecto.
             session.refresh(user_admin_default)
 
-            print(f"Usuario administrador por defecto creado: {user_admin_default.email}")
+            print(
+                f"Usuario administrador por defecto creado: {user_admin_default.email}"
+            )
         else:
-            print("El usuario administrador por defecto ya existe. Omitiendo la creación.")
+            print(
+                "El usuario administrador por defecto ya existe. Omitiendo la creación."
+            )
 
-        yield #Yield es para que FastAPI pueda iniciar y ejecutar la aplicación
+        yield  # Yield es para que FastAPI pueda iniciar y ejecutar la aplicación
     # Here you could add any cleanup code if needed
-
 
 
 app = FastAPI(lifespan=lifespan)

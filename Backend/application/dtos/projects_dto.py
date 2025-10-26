@@ -3,7 +3,14 @@ import uuid
 
 
 class ProjectCreateDTO:
-    def __init__(self, name: str, code:str, description: str, project_file:UploadFile, company_id:uuid.UUID):
+    def __init__(
+        self,
+        name: str,
+        code: str,
+        description: str,
+        project_file: UploadFile,
+        company_id: uuid.UUID,
+    ):
         self.name = name
         self.description = description
         self.code = code

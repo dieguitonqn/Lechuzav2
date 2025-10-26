@@ -11,11 +11,11 @@
 
 # @router.post("/company", status_code=status.HTTP_201_CREATED)
 # async def create_company(company: Company, session: Session = Depends(get_session)):
-    
+
 #     company_in_db = session.exec(select(Company).where(Company.nombre == company.nombre)).first()
 #     if company_in_db:
 #         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Company already exists")
-    
+
 #     new_company = Company(nombre=company.nombre, codigo=company.codigo)
 #     session.add(new_company)
 #     session.commit()

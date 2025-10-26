@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from fastapi import UploadFile
 
-class IFileManager(ABC):
 
+class IFileManager(ABC):
     @abstractmethod
     async def save_file(self, file: UploadFile, destination_path: str) -> str:
         pass

@@ -5,10 +5,14 @@ from fastapi import Form, UploadFile, File
 from sqlalchemy import Column
 from sqlalchemy.types import JSON
 from sqlmodel import Field, SQLModel, Relationship
-from domain.entities.models_links import ProjectUserLink  # Importa la clase User para las relaciones
+from domain.entities.models_links import (
+    ProjectUserLink,
+)  # Importa la clase User para las relaciones
 from pydantic import BaseModel
 
-from domain.entities.documents import Document  # Importa la clase Document para las relaciones
+from domain.entities.documents import (
+    Document,
+)  # Importa la clase Document para las relaciones
 # from domain.entities.companies import Company  # Importa la clase Company para las relaciones
 
 
@@ -20,7 +24,9 @@ class Project(SQLModel, table=True):
     fecha_inicio: datetime = Field(default_factory=datetime.now)
     fecha_fin: Optional[datetime] = None
     estado_proyecto: str = Field(default="Activo")
-    emails_notificacion: Optional[List[str]] = Field(default=None, sa_column=Column(JSON))    
+    emails_notificacion: Optional[List[str]] = Field(
+        default=None, sa_column=Column(JSON)
+    )
     # Relación a los usuarios a través de la tabla intermedia
     users: List["User"] = Relationship(
         back_populates="projects", link_model=ProjectUserLink
@@ -28,8 +34,8 @@ class Project(SQLModel, table=True):
     company_id: Optional[uuid.UUID] = Field(default=None, foreign_key="company.id")
     companies: List["Company"] = Relationship(back_populates="projects")
     documents: List["Document"] = Relationship(back_populates="project")
-    contrato:Optional[str] = None
-    contrato_url:Optional[str] = None
+    contrato: Optional[str] = None
+    contrato_url: Optional[str] = None
 
 
 class ProjectCreate(BaseModel):
@@ -39,6 +45,7 @@ class ProjectCreate(BaseModel):
     emails_notification: Optional[List[str]] = Form(None)
     contract_file: UploadFile = File(...)
     contract: str = Form(None)
+
 
 # from domain.entities.users import User
 # from domain.entities.companies import Company

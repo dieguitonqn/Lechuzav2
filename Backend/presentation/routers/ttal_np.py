@@ -27,7 +27,7 @@
 #         content = await document_file.read()
 #         file_object.write(content)
 
-    
+
 #     new_ttal_np = Transmittal_NP(
 #         project_id=project_id,
 #         codigo=codigo,

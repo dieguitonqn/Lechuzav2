@@ -9,6 +9,7 @@ from presentation.api.v1.dependencies.get_user_create import get_user_create_use
 # Incluir el router en la app para los tests
 app.include_router(users)
 
+
 @pytest.fixture
 def client():
     """
@@ -16,8 +17,6 @@ def client():
     """
     with TestClient(app) as c:
         yield c
-
-
 
 
 @pytest.fixture
@@ -46,15 +45,15 @@ def mock_create_user_use_case():
         # Clean up override after test
         app.dependency_overrides.pop(get_user_create_use_case, None)
 
+
 def test_create_user_success(client, mock_create_user_use_case):
     """
     Test para la creación exitosa de un usuario.
     """
     # El mock ya está configurado para devolver un User en el fixture
-    response = client.post("/users/", data={
-        "email": "test@example.com",
-        "password": "password123"
-    })
+    response = client.post(
+        "/users/", data={"email": "test@example.com", "password": "password123"}
+    )
 
     # Verifica el resultado
     assert response.status_code == status.HTTP_201_CREATED
@@ -65,17 +64,18 @@ def test_create_user_success(client, mock_create_user_use_case):
     assert isinstance(mock_create_user_use_case.execute.return_value, bool)
     assert mock_create_user_use_case.execute.return_value is True
 
+
 def test_create_user_error(client, mock_create_user_use_case):
     """
     Test para el caso de error (ej: email duplicado).
     """
-    mock_create_user_use_case.execute.side_effect = ValueError("User with this email already exists")
-    response = client.post("/users/", data={
-        "email": "test@example.com",
-        "password": "password123"
-    })
+    mock_create_user_use_case.execute.side_effect = ValueError(
+        "User with this email already exists"
+    )
+    response = client.post(
+        "/users/", data={"email": "test@example.com", "password": "password123"}
+    )
 
     # Verifica el resultado
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json() == {"detail": "User with this email already exists"}
-

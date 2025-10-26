@@ -5,10 +5,11 @@ import os
 
 
 class FileManager(IFileManager):
-
     async def save_file(self, file: UploadFile, destination_path: str) -> str:
         try:
-            filename = Path(file.filename).name  # evita subdirectorios maliciosos en el nombre
+            filename = Path(
+                file.filename
+            ).name  # evita subdirectorios maliciosos en el nombre
             if not os.path.exists(destination_path):
                 os.makedirs(destination_path)
             with open(destination_path / filename, "wb") as f:

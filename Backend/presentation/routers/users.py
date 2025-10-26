@@ -10,8 +10,6 @@
 # users = APIRouter()
 
 
-
-
 # @users.post("/prev_users", status_code=status.HTTP_201_CREATED)
 # async def create_user(user: UserCreate, session: Session = Depends(get_session)):
 #     db_user = User(
@@ -27,9 +25,6 @@
 #     return True
 
 
-
-
-
 # @users.get("/users", response_model=List[User], status_code=status.HTTP_200_OK)
 # def read_users(session: Session = Depends(get_session)):
 #     statement = select(User)
@@ -40,7 +35,7 @@
 #     except Exception as e:
 #         print("Error occurred:", e)
 #         raise e  # Re-raise the exception after logging it
-    
+
 
 # @users.get("/users/{user_id}")
 # def read_user(user_id: uuid.UUID, session: Session = Depends(get_session)):

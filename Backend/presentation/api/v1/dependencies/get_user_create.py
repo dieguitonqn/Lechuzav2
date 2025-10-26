@@ -2,7 +2,9 @@ from fastapi import Depends
 from infrastructure.database.database import get_session
 from sqlmodel import Session
 from application.use_cases.users_uc import CreateUserUseCase
-from infrastructure.repositories.users_repo import SQLModelUserRepository as UserRepository
+from infrastructure.repositories.users_repo import (
+    SQLModelUserRepository as UserRepository,
+)
 
 
 def get_user_create_use_case(session: Session = Depends(get_session)):

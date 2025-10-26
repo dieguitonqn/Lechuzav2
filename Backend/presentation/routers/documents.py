@@ -11,10 +11,10 @@
 
 # @documents.post("/documents", response_model=Document)
 # async def create_document(
-#     codigo: str = Form(...), 
-#     nombre: str = Form(...), 
-#     revision: str = Form(...), 
-#     estado_id: str = Form(...), 
+#     codigo: str = Form(...),
+#     nombre: str = Form(...),
+#     revision: str = Form(...),
+#     estado_id: str = Form(...),
 #     project_id: str = Form(...),
 #     document_file:UploadFile = File(...),
 #     session: Session = Depends(get_session)
@@ -27,7 +27,7 @@
 #     with open(file_location, "wb") as file_object:
 #         content = await document_file.read()
 #         file_object.write(content)
-    
+
 #     new_doc = Document(
 #         codigo=codigo,
 #         nombre=nombre,

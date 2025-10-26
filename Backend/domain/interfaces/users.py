@@ -2,10 +2,17 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 from domain.entities.users import User
 
-class IUserRepository(ABC):
 
+class IUserRepository(ABC):
     @abstractmethod
-    def create_user(self, email: str, password: str, is_active: bool = False, is_epen_user: bool = False, is_admin: bool = False) -> User:
+    def create_user(
+        self,
+        email: str,
+        password: str,
+        is_active: bool = False,
+        is_epen_user: bool = False,
+        is_admin: bool = False,
+    ) -> User:
         pass
 
     @abstractmethod

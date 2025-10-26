@@ -5,17 +5,18 @@ from unittest.mock import MagicMock
 from presentation.api.v1.endpoints.companies import companies
 
 
-
 @pytest.fixture
 def client():
     """
     Cliente de prueba que usa la app principal para que los dependency overrides funcionen.
     """
     from main import app
+
     app.include_router(companies)  # Asegurarse que el router esté incluido
-    
+
     with TestClient(app) as client:
         yield client
+
 
 @pytest.fixture
 def mock_company_uc():
@@ -32,6 +33,7 @@ def mock_company_uc():
     mock_uc.create_company.return_value = mocked_class
     return mock_uc
 
+
 @pytest.fixture()
 def ov_get_company_uc(mock_company_uc):
     """
@@ -46,24 +48,25 @@ def ov_get_company_uc(mock_company_uc):
     finally:
         app.dependency_overrides.pop(get_company_uc, None)
 
+
 def test_create_company_success(client, ov_get_company_uc):
     """
     Test para la creación exitosa de una compañía.
     """
     response = client.post("/companies/", json={"name": "TOTAL", "code": "9876"})
     assert response.status_code == status.HTTP_201_CREATED
-    
+
     # Verificar la respuesta
     response_data = response.json()
     assert response_data["message"] == "Company created successfully"
     assert response_data["name"] == "TOTAL"
     assert response_data["codigo"] == "9876"
-    
+
     # Verificar que el mock fue llamado correctamente
     ov_get_company_uc.create_company.assert_called_once_with("TOTAL", "9876")
 
-def test_create_company_failure(client, ov_get_company_uc):
 
+def test_create_company_failure(client, ov_get_company_uc):
     ov_get_company_uc.create_company.side_effect = Exception("Database error")
 
     response = client.post("/companies/", json={"name": "TOTAL", "code": "9876"})

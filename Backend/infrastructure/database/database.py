@@ -1,11 +1,13 @@
-
 from sqlmodel import create_engine, Session, SQLModel
 from infrastructure.database.config import settings
 
 # Configura el engine de SQLModel(SQLAlchemy) para PostgreSQL
 
 
-engine = create_engine(settings.database_url, echo=True, pool_recycle=3600) # echo=True para ver las queries SQL en consola
+engine = create_engine(
+    settings.database_url, echo=True, pool_recycle=3600
+)  # echo=True para ver las queries SQL en consola
+
 
 def create_db_and_tables():
     """
@@ -21,11 +23,12 @@ def create_db_and_tables():
     from domain.entities.correction_reports import CorrectionReport
     from domain.entities.models_links import ProjectUserLink
     from domain.entities.ttals_nps import Transmittal_NP
-    
+
     # Crear las tablas basándose en los modelos importados
     SQLModel.metadata.create_all(engine)
 
     # Para producción se utiliza Alembic para manejar las migraciones de la base de datos
+
 
 def get_session():
     """
@@ -33,5 +36,5 @@ def get_session():
     Asegura que la sesión se cierre después de cada solicitud.
     """
     with Session(engine) as session:
-        yield session               # Devuelve la sesión para que se use en las rutas de FastAPI. El yield es para que la sesión se cierre automáticamente al finalizar la solicitud.
-        session.close()             # Cierra la sesión al finalizar la solicitud
+        yield session  # Devuelve la sesión para que se use en las rutas de FastAPI. El yield es para que la sesión se cierre automáticamente al finalizar la solicitud.
+        session.close()  # Cierra la sesión al finalizar la solicitud

@@ -13,4 +13,3 @@ def get_save_ttal_and_docs_uc(session: Session = Depends(get_session)):
     document_repo = SQLModelDocumentRepository(session)
     file_manager = FileManager()
     return SaveTtalAndDocsUseCase(ttal_np_repo, document_repo, file_manager)
-

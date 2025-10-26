@@ -1,4 +1,3 @@
-
 class UserCreateDTO:
     def __init__(self, email: str, password: str):
         self.email = email

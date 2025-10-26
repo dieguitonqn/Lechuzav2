@@ -4,17 +4,20 @@ from domain.interfaces.documents import IDocumentRepository
 from infrastructure.database.database import get_session
 from domain.entities.documents import Document
 
-class SQLModelDocumentRepository(IDocumentRepository):
 
+class SQLModelDocumentRepository(IDocumentRepository):
     def __init__(self, session: Session = get_session()):
         self.session = session
 
-    def create_document(self, codigo: str, 
-                              nombre: str, 
-                              revision: str, 
-                              document_file: str, 
-                              project_id: str,
-                              ttal_np_id: uuid.UUID = None):
+    def create_document(
+        self,
+        codigo: str,
+        nombre: str,
+        revision: str,
+        document_file: str,
+        project_id: str,
+        ttal_np_id: uuid.UUID = None,
+    ):
         document_db = Document(
             codigo=codigo,
             nombre=nombre,
@@ -22,7 +25,7 @@ class SQLModelDocumentRepository(IDocumentRepository):
             document_file=document_file,
             project_id=project_id,
             ttal_np_id=ttal_np_id,
-            estado_id=1  # Asignar un estado por defecto (por ejemplo, "Nuevo" con id=1
+            estado_id=1,  # Asignar un estado por defecto (por ejemplo, "Nuevo" con id=1
         )
         try:
             self.session.add(document_db)

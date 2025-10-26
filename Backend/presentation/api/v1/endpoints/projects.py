@@ -7,21 +7,22 @@ import uuid
 
 projects = APIRouter(prefix="/projects")
 
-@projects.post("/", status_code=status.HTTP_201_CREATED)
-async def create_project(name: str=Form(...),
-                         code: str=Form(...),
-                         description: str=Form(...),
-                         company_id: uuid.UUID = Form(...),
-                         project_file: UploadFile = File(...),
-                         project_uc: ProjectUseCase = Depends(get_project_uc)):
 
+@projects.post("/", status_code=status.HTTP_201_CREATED)
+async def create_project(
+    name: str = Form(...),
+    code: str = Form(...),
+    description: str = Form(...),
+    company_id: uuid.UUID = Form(...),
+    project_file: UploadFile = File(...),
+    project_uc: ProjectUseCase = Depends(get_project_uc),
+):
     project_dto: ProjectCreateDTO = ProjectCreateDTO(
         name=name,
         code=code,
         description=description,
         project_file=project_file,
-        company_id=company_id
-
+        company_id=company_id,
     )
     try:
         project = project_uc.create_project(project_dto)

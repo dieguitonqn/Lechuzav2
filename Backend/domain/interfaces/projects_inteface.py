@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 from application.dtos.projects_dto import ProjectCreateDTO
 from domain.entities.projects import Project
+
+
 class IProject(ABC):
     @abstractmethod
     async def create_project(self, project: ProjectCreateDTO) -> Project:
-        
         pass
 
     @abstractmethod

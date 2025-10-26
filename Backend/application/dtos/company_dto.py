@@ -1,5 +1,3 @@
-
-
 class CompanyDTO:
     id: int
     name: str
