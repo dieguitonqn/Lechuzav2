@@ -3,7 +3,7 @@ import pytest
 from main import app
 from fastapi.testclient import TestClient
 from fastapi import status
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, AsyncMock
 from presentation.api.v1.endpoints.projects import projects
 
 
@@ -21,7 +21,7 @@ def mock_get_project_uc():
     project_mock = MagicMock()
     project_mock.id = uuid.uuid4()
     project_uc_mock = MagicMock()
-    project_uc_mock.create_project.return_value = project_mock
+    project_uc_mock.create_project = AsyncMock(return_value=project_mock)
     return project_uc_mock
 
 
