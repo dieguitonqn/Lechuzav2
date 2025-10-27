@@ -11,7 +11,8 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest  # Ejecuta el trabajo en un entorno Linux
-
+    env:
+        DATABASE_URL: postgresql://postgres:example123@localhost:5432/example
     steps:
     - name: ⬇️ Checkout del Código
       uses: actions/checkout@v4
@@ -53,6 +54,7 @@ jobs:
     - name: 🧪 Ejecutar Pruebas con pytest
       # Ejecuta todas las pruebas unitarias y de integración.
       # Se asume que las dependencias de la DB de prueba (si las hay) están configuradas.
+      
       run: |
         cd Backend
         uv run pytest
