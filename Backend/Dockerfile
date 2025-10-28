@@ -7,7 +7,6 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Copiar archivos de dependencias
 COPY Backend/pyproject.toml Backend/uv.lock* ./
-COPY Backend/uv.lock ./
 COPY README.md ./
 # Instalar dependencias usando uv
 RUN uv sync --frozen --no-dev
