@@ -66,4 +66,4 @@ jobs:
     - name: 🐳 Construir Imagen Docker (Artefacto de CI)
       # Construye la imagen solo para verificar que el Dockerfile funciona con el código actual.
       run: |
-        docker build -t fastapi-app:latest .
+        docker build -f Backend/Dockerfile -t fastapi-app:latest .
