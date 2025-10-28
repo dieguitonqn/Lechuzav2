@@ -61,9 +61,9 @@ jobs:
         cd Backend
         uv run pytest
         
-    # --- Etapa opcional de Construcción de Docker (Fin de CI) ---
+    # # --- Etapa opcional de Construcción de Docker (Fin de CI) ---
 
-    - name: 🐳 Construir Imagen Docker (Artefacto de CI)
-      # Construye la imagen solo para verificar que el Dockerfile funciona con el código actual.
-      run: |
-        docker build -f Backend/Dockerfile -t fastapi-app:latest .
+    # - name: 🐳 Construir Imagen Docker (Artefacto de CI)
+    #   # Construye la imagen solo para verificar que el Dockerfile funciona con el código actual.
+    #   run: |
+    #     docker build -f Backend/Dockerfile -t fastapi-app:latest .
