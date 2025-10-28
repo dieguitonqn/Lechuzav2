@@ -1,0 +1,10 @@
+# Development dependencies for local development and CI
+# Install with: .venv/bin/pip install -r requirements-dev.txt
+pytest==8.4.1
+pytest-cov==7.0.0
+pytest-watch==4.2.0
+pytest-watcher==0.4.3
+coverage==7.11.0
+ruff==0.14.1
+watchdog==6.0.0
+watchfiles==1.1.0
