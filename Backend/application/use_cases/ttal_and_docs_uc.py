@@ -42,7 +42,8 @@ class SaveTtalAndDocsUseCase:
         for doc_dto in ttal_dto.documents:
             # Save document file, return document path
             # document_path = await self.file_manager.save_file(doc_dto.document_file)
-            document_dir = Path("files") / doc_dto.project_id
+            # Asegurar que el UUID se convierta a string al componer rutas
+            document_dir = Path("files") / str(doc_dto.project_id)
             document_path = await self.file_manager.save_file(
                 file=doc_dto.document_file, destination_path=str(document_dir)
             )

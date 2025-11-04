@@ -2,6 +2,7 @@ from fastapi import Depends, APIRouter, HTTPException, status
 from presentation.api.v1.dependencies.get_company_uc import get_company_uc
 from application.use_cases.company_uc import CompanyUseCase
 from domain.entities.companies import CompanyEndpoint, Company
+from application.dtos.company_dto import CompanyDTO
 
 companies = APIRouter(prefix="/companies")
 
@@ -10,8 +11,12 @@ companies = APIRouter(prefix="/companies")
 def create_company(
     company: CompanyEndpoint, company_uc: CompanyUseCase = Depends(get_company_uc)
 ):
+    company_dto = CompanyDTO(
+        nombre=company.name,
+        codigo=company.code,
+    )
     try:
-        company_db: Company = company_uc.create_company(company.name, company.code)
+        company_db: Company = company_uc.create_company(company_dto)
         return {
             "message": "Company created successfully",
             "name": company_db.nombre,

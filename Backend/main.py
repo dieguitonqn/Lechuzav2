@@ -8,6 +8,7 @@ from infrastructure.database.database import create_db_and_tables, engine
 from presentation.routers.auth import crypt
 from domain.entities.users import User
 from presentation.api.v1.routers import router
+from domain.entities.statuses import Status
 
 
 @asynccontextmanager
@@ -56,7 +57,20 @@ async def lifespan(app: FastAPI):
             print(
                 "El usuario administrador por defecto ya existe. Omitiendo la creación."
             )
-
+        default_status = Status(
+            nombre="EN REVISION",
+            descripcion="Documento en proceso de revisión",
+        )
+        # Verificar si el estado por defecto ya existe
+        statement = select(Status).where(Status.nombre == default_status.nombre)
+        existing_status = session.exec(statement).first()   
+        if not existing_status:
+            session.add(default_status)
+            session.commit()
+            session.refresh(default_status)
+            print(f"Estado por defecto creado: {default_status.nombre}")
+        else:
+            print("El estado por defecto ya existe. Omitiendo la creación.")
         yield  # Yield es para que FastAPI pueda iniciar y ejecutar la aplicación
     # Here you could add any cleanup code if needed
 

@@ -1,12 +1,7 @@
 import pytest
-import sys
-import os
 from unittest.mock import MagicMock
 
-# Agregar el directorio raíz del backend al Python path
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
-)
+
 
 from application.use_cases.users_uc import CreateUserUseCase
 from application.dtos.users_create import UserCreateDTO

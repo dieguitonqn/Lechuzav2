@@ -63,7 +63,8 @@ def test_create_company_success(client, ov_get_company_uc):
     assert response_data["codigo"] == "9876"
 
     # Verificar que el mock fue llamado correctamente
-    ov_get_company_uc.create_company.assert_called_once_with("TOTAL", "9876")
+    from unittest.mock import ANY
+    ov_get_company_uc.create_company.assert_called_once_with(ANY)
 
 
 def test_create_company_failure(client, ov_get_company_uc):

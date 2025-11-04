@@ -17,6 +17,24 @@ services:
     networks:
       - app_network
 
+  test_db:
+    image: postgres
+    container_name: postgres_test_db
+    restart: unless-stopped
+    shm_size: 128mb
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_pass
+    ports:
+      - "5433:5432"  # Puerto diferente para evitar conflictos
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    profiles:
+      - test  # Solo se ejecuta cuando se especifica el profile 'test'
+
   adminer:
     image: adminer
     container_name: adminer_ui
@@ -61,6 +79,7 @@ services:
 
 volumes:
   postgres_data:
+  test_postgres_data:
 
 networks:
   app_network:

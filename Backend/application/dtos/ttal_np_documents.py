@@ -1,4 +1,5 @@
 from fastapi import UploadFile
+import uuid
 
 
 # DTO para documentos del TTAL-NP
@@ -21,7 +22,7 @@ class DocumentDataDTO:
 class TtalNpDTO:
     def __init__(
         self,
-        project_id: str,
+        project_id: uuid.UUID,
         ttal_np_code: str,
         ttal_np_file: UploadFile,
         ttal_np_description: str,
