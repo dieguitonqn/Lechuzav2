@@ -41,7 +41,6 @@ def test_client(test_engine):
 
 
 def test_create_project_success(test_client):
-    
     # Primero, crear una compañía para asociar al proyecto
     company_response = test_client.post(
         "/api/v1/companies/", json={"name": "Associated Company", "code": "AC123"}
@@ -66,5 +65,3 @@ def test_create_project_success(test_client):
     assert response.status_code == 201
     data = response.json()
     assert data["message"] == "Project created successfully"
-
-    

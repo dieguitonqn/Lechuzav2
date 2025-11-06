@@ -64,6 +64,7 @@ def test_create_company_success(client, ov_get_company_uc):
 
     # Verificar que el mock fue llamado correctamente
     from unittest.mock import ANY
+
     ov_get_company_uc.create_company.assert_called_once_with(ANY)
 
 

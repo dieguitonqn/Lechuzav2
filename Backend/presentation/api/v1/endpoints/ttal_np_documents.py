@@ -9,6 +9,7 @@ from presentation.api.v1.dependencies.get_save_ttal_docs_uc import (
 
 ttal_documents = APIRouter(prefix="/ttal-docs")
 
+
 @ttal_documents.post("/", status_code=status.HTTP_201_CREATED)
 async def upload_ttal_document(
     project_id: uuid.UUID = Form(...),
@@ -23,14 +24,20 @@ async def upload_ttal_document(
     # save_ttal_and_docs_
     use_case: SaveTtalAndDocsUseCase = Depends(get_save_ttal_and_docs_uc),
 ):
-        # Validaciones básicas
+    # Validaciones básicas
     print("Document codes received:", document_code)
     print("Document names received:", document_name)
     print("Document revisions received:", document_revision)
     print("Number of document files received:", len(document_file))
-    document_code = [code.strip() for code in document_code[0].split(',') if code.strip()]
-    document_name = [name.strip() for name in document_name[0].split(',') if name.strip()]
-    document_revision = [rev.strip() for rev in document_revision[0].split(',') if rev.strip()]
+    document_code = [
+        code.strip() for code in document_code[0].split(",") if code.strip()
+    ]
+    document_name = [
+        name.strip() for name in document_name[0].split(",") if name.strip()
+    ]
+    document_revision = [
+        rev.strip() for rev in document_revision[0].split(",") if rev.strip()
+    ]
     print("Document codes received:", document_code)
     print("Document names received:", document_name)
     print("Document revisions received:", document_revision)

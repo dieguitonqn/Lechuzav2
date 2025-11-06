@@ -22,8 +22,14 @@ async def create_user(
     )
 
     try:
-        users_use_case.execute(user_dto)
-        return {"message": "User created successfully"}
+        response = users_use_case.execute(user_dto)
+        return {
+            "message": "User created successfully",
+            "email": response.email,
+            "is_active": response.is_active,
+            "is_admin": response.is_admin,
+            "is_epen_user": response.is_epen_user,
+        }
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 

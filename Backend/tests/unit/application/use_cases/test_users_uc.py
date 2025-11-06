@@ -2,7 +2,6 @@ import pytest
 from unittest.mock import MagicMock
 
 
-
 from application.use_cases.users_uc import CreateUserUseCase
 from application.dtos.users_create import UserCreateDTO
 

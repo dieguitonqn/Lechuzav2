@@ -19,7 +19,7 @@ class SQLModelUserRepository(IUserRepository):
     ) -> User:
         user = User(
             email=email,
-            password=password,
+            password_hash=password,
             is_active=is_active,
             is_epen_user=is_epen_user,
             is_admin=is_admin,

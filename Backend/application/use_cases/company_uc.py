@@ -7,7 +7,7 @@ class CompanyUseCase:
     def __init__(self, company_repository: ICompany):
         self.company_repository = company_repository
 
-    def create_company(self, company_dto:CompanyDTO) -> Company:
+    def create_company(self, company_dto: CompanyDTO) -> Company:
         # Logic to create a company
         try:
             new_company: Company = self.company_repository.create_company(
