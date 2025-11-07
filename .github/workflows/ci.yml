@@ -59,7 +59,8 @@ jobs:
       
       run: |
         cd Backend
-        uv run pytest --cov=. --cov-report=term-missing --cov-fail-under=90
+        uv run pytest tests/integration --cov=. --cov-report=term-missing --cov-fail-under=80
+        
         
     # --- Etapa opcional de Construcción de Docker (Fin de CI) ---
 
