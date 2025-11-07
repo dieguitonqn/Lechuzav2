@@ -12,9 +12,23 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest  # Ejecuta el trabajo en un entorno Linux
     
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
       
     env:
-        DATABASE_URL: postgresql://postgres:example123@localhost:5432/example
+        DATABASE_URL: postgresql://test_user:test_pass@localhost:5433/test_db
     steps:
     - name: ⬇️ Checkout del Código
       uses: actions/checkout@v4
