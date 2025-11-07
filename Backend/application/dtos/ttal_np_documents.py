@@ -10,7 +10,7 @@ class DocumentDataDTO:
         name: str,
         revision: str,
         document_file: UploadFile,
-        project_id: str,
+        project_id: uuid.UUID,
     ):
         self.code = code
         self.name = name

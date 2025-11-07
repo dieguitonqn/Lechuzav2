@@ -62,8 +62,8 @@ async def lifespan(app: FastAPI):
             descripcion="Documento en proceso de revisión",
         )
         # Verificar si el estado por defecto ya existe
-        statement = select(Status).where(Status.nombre == default_status.nombre)
-        existing_status = session.exec(statement).first()
+        status_statement = select(Status).where(Status.nombre == default_status.nombre)
+        existing_status = session.exec(status_statement).first()
         if not existing_status:
             session.add(default_status)
             session.commit()
