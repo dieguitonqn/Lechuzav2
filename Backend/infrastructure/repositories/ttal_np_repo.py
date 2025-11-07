@@ -4,6 +4,7 @@ from sqlmodel import Session
 from domain.entities.ttals_nps import Transmittal_NP
 import uuid
 
+
 class SQLModelTtalNpRepository(ITtalNpRepository):
     def __init__(self, session: Session = get_session()):
         self.session = session
