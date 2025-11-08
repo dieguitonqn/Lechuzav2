@@ -49,7 +49,7 @@ def client(db_session):
 def test_create_user_success(client):
     """Test de integración para crear un nuevo usuario exitosamente"""
     response = client.post(
-        "api/v1/users/",
+        "/api/v1/users/",
         data={
             "email": "test@example.com",
             "password": "testpassword",
