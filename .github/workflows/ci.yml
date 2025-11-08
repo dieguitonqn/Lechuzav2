@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main  # Se activa al hacer push a 'main'
+      - dev
   pull_request:
     branches:
       - main  # Se activa para cualquier PR dirigida a 'main'
@@ -21,11 +22,7 @@ jobs:
           POSTGRES_PASSWORD: test_pass
         ports:
           - 5433:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        
       
     env:
         DATABASE_URL: postgresql://test_user:test_pass@localhost:5433/test_db
