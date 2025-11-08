@@ -66,7 +66,7 @@ def test_create_user_success(client):
 def test_create_user_missing_fields(client):
     """Test de integración para crear un usuario con campos faltantes"""
     response = client.post(
-        "api/v1/users/",
+        "/api/v1/users/",
         data={
             "email": "",
             "password": "testpassword",
@@ -88,7 +88,7 @@ def test_create_user_duplicate_email(client, db_session):
 
     # Intentar crear un segundo usuario con el mismo email
     response2 = client.post(
-        "api/v1/users/",
+        "/api/v1/users/",
         data={
             "email": "test@example.com",
             "password": "testpassword",
