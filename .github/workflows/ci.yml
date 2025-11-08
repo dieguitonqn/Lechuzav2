@@ -69,6 +69,21 @@ jobs:
         cd Backend
         uv run mypy .
 
+    - name: ⏳ Esperar disponibilidad de PostgreSQL
+      # Espera activa hasta que PostgreSQL esté listo para aceptar conexiones
+      run: |
+        echo "Esperando a que PostgreSQL esté listo..."
+        for i in {1..30}; do
+          if pg_isready -h localhost -p 5433 -U test_user -d test_db > /dev/null 2>&1; then
+            echo "✅ PostgreSQL está listo"
+            exit 0
+          fi
+          echo "Intento $i/30: PostgreSQL aún no está listo..."
+          sleep 2
+        done
+        echo "❌ PostgreSQL no respondió a tiempo"
+        exit 1
+
     - name: 🧪 Ejecutar Pruebas con pytest
       # Ejecuta todas las pruebas unitarias y de integración.
       # Se asume que las dependencias de la DB de prueba (si las hay) están configuradas.

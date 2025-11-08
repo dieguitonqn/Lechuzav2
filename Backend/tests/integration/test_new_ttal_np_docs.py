@@ -14,9 +14,8 @@ def test_engine():
     test_db_url = "postgresql://test_user:test_pass@localhost:5433/test_db"
 
     engine = create_engine(test_db_url, echo=False)
-    SQLModel.metadata.drop_all(engine)
-
-    # Crear tablas para tests
+    
+    # Crear tablas para tests (sin drop previo para evitar conflictos)
     SQLModel.metadata.create_all(engine)
 
     yield engine
@@ -29,6 +28,15 @@ def test_engine():
 def db_session(test_engine):
     """Sesión de base de datos para cada test"""
     with Session(test_engine) as session:
+        # Asegurar que existe el Status con id=1 antes de cada test
+        default_status = session.get(Status, 1)
+        if not default_status:
+            default_status = Status(
+                id=1, nombre="EN REVISION", descripcion="Documento en proceso de revisión"
+            )
+            session.add(default_status)
+            session.commit()
+        
         yield session
         session.rollback()  # Asegura que los cambios no persistan entre tests
 
@@ -63,16 +71,6 @@ def test_create_ttal_np_doc(client, db_session):
     db_session.commit()
     db_session.refresh(project)
 
-    # Asegurar estado por defecto con id=1 para cumplir FK en Document.estado_id
-    default_status = db_session.get(Status, 1)
-    if not default_status:
-        default_status = Status(
-            id=1, nombre="EN REVISION", descripcion="Documento en proceso de revisión"
-        )
-        db_session.add(default_status)
-        db_session.commit()
-        db_session.refresh(default_status)
-
     # Enviar TODO como multipart con 'files'. Para campos no-archivo usar (None, valor)
     response = client.post(
         "/api/v1/ttal-docs/",
@@ -106,33 +104,7 @@ def test_create_ttal_np_doc(client, db_session):
 
 def test_create_ttal_np_doc_missing_fields(client, db_session):
     """Test de integración para crear un nuevo Ttal NP Doc con campos faltantes"""
-    # Reiniciar la base de datos para comenzar desde cero antes de este test
-    bind = db_session.get_bind()
-    SQLModel.metadata.drop_all(bind)
-    SQLModel.metadata.create_all(bind)
-    # Creo un proyecto de prueba
-    project_data = {
-        "name": "Test Project01",
-        "description": "A project for testing",
-    }
-    project = Project(
-        nombre=project_data["name"],
-        codigo="TP001",
-        descripcion=project_data["description"],
-    )
-    db_session.add(project)
-    db_session.commit()
-    db_session.refresh(project)
-
-    # Asegurar estado por defecto con id=1 para cumplir FK en Document.estado_id
-    default_status = db_session.get(Status, 1)
-    if not default_status:
-        default_status = Status(
-            id=1, nombre="EN REVISION", descripcion="Documento en proceso de revisión"
-        )
-        db_session.add(default_status)
-        db_session.commit()
-        db_session.refresh(default_status)
+    # No necesitamos reiniciar la DB aquí, el fixture db_session ya maneja la limpieza
 
     # Enviar solicitud con campos faltantes
     response = client.post(
@@ -163,44 +135,30 @@ def test_create_ttal_np_doc_missing_fields(client, db_session):
 
 
 def test_create_ttal_exception(client, db_session):
-    # Reiniciar la base de datos para comenzar desde cero antes de este test
-    bind = db_session.get_bind()
-    SQLModel.metadata.drop_all(bind)
-    SQLModel.metadata.create_all(bind)
     """Test de integración para crear un nuevo Ttal NP Doc que lanza excepción"""
-    # Creo un proyecto de prueba
+    # Creo un proyecto de prueba con nombre único para evitar conflictos
     project_data = {
-        "name": "Test Project01",
-        "description": "A project for testing",
+        "name": "Test Project Exception",
+        "description": "A project for testing exceptions",
     }
     project = Project(
         nombre=project_data["name"],
-        codigo="TP001",
+        codigo="TP_EXCEPTION",
         descripcion=project_data["description"],
     )
     db_session.add(project)
     db_session.commit()
     db_session.refresh(project)
-
-    # Asegurar estado por defecto con id=1 para cumplir FK en Document.estado_id
-    default_status = db_session.get(Status, 1)
-    if not default_status:
-        default_status = Status(
-            id=1, nombre="EN REVISION", descripcion="Documento en proceso de revisión"
-        )
-        db_session.add(default_status)
-        db_session.commit()
-        db_session.refresh(default_status)
     # Primero creo un TTAL-NP con código específico para forzar excepción en segundo intento
     response_initial = client.post(
         "/api/v1/ttal-docs/",
         files=[
             ("project_id", (None, str(project.id))),
-            ("ttal_np_code", (None, "TTALNP001")),
+            ("ttal_np_code", (None, "TTALNP_EXCEPTION_01")),
             ("ttal_np_description", (None, "Test Transmittal NP Document")),
             # El endpoint actual toma el primer elemento y lo separa por comas
-            ("document_code", (None, "DOC001,DOC002")),
-            ("document_name", (None, "Document 1,Document 2")),
+            ("document_code", (None, "DOC_EXC_001,DOC_EXC_002")),
+            ("document_name", (None, "Document Exc 1,Document Exc 2")),
             ("document_revision", (None, "A,C")),
             # Archivos
             (
@@ -217,11 +175,11 @@ def test_create_ttal_exception(client, db_session):
         "/api/v1/ttal-docs/",
         files=[
             ("project_id", (None, str(project.id))),
-            ("ttal_np_code", (None, "TTALNP001")),
+            ("ttal_np_code", (None, "TTALNP_EXCEPTION_01")),
             ("ttal_np_description", (None, "Test Transmittal NP Document")),
             # El endpoint actual toma el primer elemento y lo separa por comas
-            ("document_code", (None, "DOC001,DOC002")),
-            ("document_name", (None, "Document 1,Document 2")),
+            ("document_code", (None, "DOC_EXC_001,DOC_EXC_002")),
+            ("document_name", (None, "Document Exc 1,Document Exc 2")),
             ("document_revision", (None, "A,C")),
             # Archivos
             (
