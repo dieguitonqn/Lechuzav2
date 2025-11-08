@@ -14,7 +14,7 @@ def test_engine():
     test_db_url = "postgresql://test_user:test_pass@localhost:5433/test_db"
 
     engine = create_engine(test_db_url, echo=False)
-    
+
     # Crear tablas para tests (sin drop previo para evitar conflictos)
     SQLModel.metadata.create_all(engine)
 
@@ -32,11 +32,13 @@ def db_session(test_engine):
         default_status = session.get(Status, 1)
         if not default_status:
             default_status = Status(
-                id=1, nombre="EN REVISION", descripcion="Documento en proceso de revisión"
+                id=1,
+                nombre="EN REVISION",
+                descripcion="Documento en proceso de revisión",
             )
             session.add(default_status)
             session.commit()
-        
+
         yield session
         session.rollback()  # Asegura que los cambios no persistan entre tests
 
