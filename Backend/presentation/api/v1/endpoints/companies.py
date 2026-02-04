@@ -1,27 +1,11 @@
-from fastapi import Depends, APIRouter, HTTPException, status
-from presentation.api.v1.dependencies.get_company_uc import get_company_uc
-from application.use_cases.company_uc import CompanyUseCase
-from domain.entities.companies import CompanyEndpoint, Company
-from application.dtos.company_dto import CompanyDTO
+"""Backward-compatible shim for companies routes.
 
-companies = APIRouter(prefix="/companies")
+This module re-exports the router from the new modular monolith layout at
+`src.modules.companies.presentation.routes` so existing imports keep working:
 
+    from presentation.api.v1.endpoints.companies import companies
 
-@companies.post("/", status_code=status.HTTP_201_CREATED)
-def create_company(
-    company: CompanyEndpoint, company_uc: CompanyUseCase = Depends(get_company_uc)
-):
-    company_dto = CompanyDTO(
-        nombre=company.name,
-        codigo=company.code,
-    )
-    try:
-        company_db: Company = company_uc.create_company(company_dto)
-        return {
-            "message": "Company created successfully",
-            "name": company_db.nombre,
-            "codigo": company_db.codigo,
-            "id": company_db.id,
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+"""
+
+from src.modules.companies.presentation.routes import router as companies  # type: ignore F401
+

@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 from unittest.mock import MagicMock, AsyncMock
 from presentation.api.v1.endpoints.ttal_np_documents import ttal_documents
 from main import app
+import uuid
 
 
 @pytest.fixture
@@ -33,7 +34,7 @@ def mock_save_ttal_and_docs_uc():
 @pytest.fixture
 def ov_get_save_ttal_and_docs_uc():
     """Override del Use Case de salvado de transmittal y documentos"""
-    from presentation.api.v1.dependencies.get_save_ttal_docs_uc import (
+    from src.modules.transmittals.presentation.dependencies import (
         get_save_ttal_and_docs_uc,
     )
 
@@ -56,8 +57,9 @@ def test_upload_ttal_document_success(client, ov_get_save_ttal_and_docs_uc):
     verifica principalmente que el endpoint puede procesar la estructura básica.
     """
     # Test con un solo documento para simplificar
+    test_project_id = str(uuid.uuid4())
     data = {
-        "project_id": "proj-123",
+        "project_id": test_project_id,
         "ttal_np_code": "TTAL-001",
         "ttal_np_description": "Test transmittal",
         "document_code": ["DOC-001"],  # Un solo valor
@@ -73,7 +75,7 @@ def test_upload_ttal_document_success(client, ov_get_save_ttal_and_docs_uc):
     response = client.post("/api/v1/ttal-docs/", data=data, files=files)
 
     # Ahora debería funcionar correctamente con AsyncMock
-    assert response.status_code == status.HTTP_200_OK
+    assert response.status_code == status.HTTP_201_CREATED
     response_data = response.json()
     assert response_data["message"] == "Transmittal and documents uploaded successfully"
 
@@ -86,8 +88,9 @@ def test_upload_ttal_document_missing_fields(client, ov_get_save_ttal_and_docs_u
     Test para verificar que el endpoint maneja correctamente campos faltantes.
     """
     # Datos incompletos - falta ttal_np_description
+    test_project_id = str(uuid.uuid4())
     data = {
-        "project_id": "proj-123",
+        "project_id": test_project_id,
         "ttal_np_code": "TTAL-001",
         # 'ttal_np_description': 'Test transmittal',  # Campo faltante
         "document_code": ["DOC-001"],
@@ -110,14 +113,15 @@ def test_upload_ttal_document_mismatched_lists(client, ov_get_save_ttal_and_docs
     """
     Test para verificar que el endpoint maneja listas desbalanceadas.
     """
-    # Listas con diferentes tamaños
+    # Listas con diferentes tamaños - usando el formato esperado (CSV en strings)
+    test_project_id = str(uuid.uuid4())
     data = {
-        "project_id": "proj-123",
+        "project_id": test_project_id,
         "ttal_np_code": "TTAL-001",
         "ttal_np_description": "Test transmittal",
-        "document_code": ["DOC-001", "DOC-002"],  # 2 elementos
-        "document_name": ["Document 1"],  # 1 elemento
-        "document_revision": ["A"],  # 1 elemento
+        "document_code": "DOC-001,DOC-002",  # 2 elementos (CSV)
+        "document_name": "Document 1",  # 1 elemento
+        "document_revision": "A",  # 1 elemento
     }
 
     files = {
@@ -142,8 +146,9 @@ def test_upload_ttal_document_use_case_error(client, ov_get_save_ttal_and_docs_u
         "Database connection error"
     )
 
+    test_project_id = str(uuid.uuid4())
     data = {
-        "project_id": "proj-123",
+        "project_id": test_project_id,
         "ttal_np_code": "TTAL-001",
         "ttal_np_description": "Test transmittal",
         "document_code": ["DOC-001"],

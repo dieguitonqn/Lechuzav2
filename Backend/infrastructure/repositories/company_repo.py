@@ -2,7 +2,7 @@ from domain.interfaces.company_interface import ICompany
 from sqlmodel import Session
 from infrastructure.database.database import get_session
 from fastapi import Depends
-
+# Note: Repository operates on domain entities; no DTO import needed here.
 
 class SQLModelCompanyRepository(ICompany):
     def __init__(self, session: Session = Depends(get_session)):

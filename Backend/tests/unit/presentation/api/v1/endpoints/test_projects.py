@@ -27,7 +27,8 @@ def mock_get_project_uc():
 
 @pytest.fixture
 def ov_get_project_uc(mock_get_project_uc):
-    from presentation.api.v1.dependencies.get_proyect_uc import get_project_uc
+    # Update import to use the new modular path
+    from src.modules.projects.presentation.dependencies import get_project_uc
 
     app.dependency_overrides[get_project_uc] = lambda: mock_get_project_uc
     try:

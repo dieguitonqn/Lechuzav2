@@ -1,0 +1,85 @@
+from fastapi import APIRouter, Depends, HTTPException, status, Form, UploadFile, File
+from typing import List
+from src.modules.transmittals.application.use_cases import SaveTtalAndDocsUseCase
+from src.modules.transmittals.application.dtos import TtalNpDTO, DocumentDataDTO
+import uuid
+from src.modules.transmittals.presentation.dependencies import (
+    get_save_ttal_and_docs_uc,
+)
+
+ttal_documents = APIRouter(prefix="/ttal-docs")
+
+@ttal_documents.post("/", status_code=status.HTTP_201_CREATED)
+async def upload_ttal_document(
+    project_id: uuid.UUID = Form(...),
+    ttal_np_code: str = Form(...),
+    ttal_np_description: str = Form(...),
+    document_code: List[str] = Form(...),
+    document_name: List[str] = Form(...),
+    document_revision: List[str] = Form(...),
+    ttal_np_file: UploadFile = File(...),
+    document_file: List[UploadFile] = File(...),
+    # Inyecto la dependencia del caso de uso instanciando la clase
+    # save_ttal_and_docs_
+    use_case: SaveTtalAndDocsUseCase = Depends(get_save_ttal_and_docs_uc),
+):
+        # Validaciones básicas
+    print("Document codes received:", document_code)
+    print("Document names received:", document_name)
+    print("Document revisions received:", document_revision)
+    print("Number of document files received:", len(document_file))
+    document_code = [code.strip() for code in document_code[0].split(',') if code.strip()]
+    document_name = [name.strip() for name in document_name[0].split(',') if name.strip()]
+    document_revision = [rev.strip() for rev in document_revision[0].split(',') if rev.strip()]
+    print("Document codes received:", document_code)
+    print("Document names received:", document_name)
+    print("Document revisions received:", document_revision)
+    print("Number of document files received:", len(document_file))
+    if (
+        len(document_code) != len(document_name)
+        or len(document_code) != len(document_revision)
+        or len(document_code) != len(document_file)
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Mismatched document fields"
+        )
+
+    if (
+        not project_id
+        or not ttal_np_code
+        or not document_file
+        or not ttal_np_description
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Missing transmittal fields"
+        )
+
+    document_list = []
+    for code, name, revision, doc_file in zip(
+        document_code, document_name, document_revision, document_file
+    ):
+        document = DocumentDataDTO(
+            code=code,
+            name=name,
+            revision=revision,
+            document_file=doc_file,
+            project_id=project_id,
+        )
+        document_list.append(document)
+    ttal_np_dto = TtalNpDTO(
+        project_id=project_id,
+        ttal_np_code=ttal_np_code,
+        ttal_np_file=ttal_np_file,
+        ttal_np_description=ttal_np_description,
+        documents=document_list,
+    )
+
+    # paso el DTO al servicio para que lo procese
+
+    try:
+        await use_case.execute(ttal_np_dto)
+        return {"message": "Transmittal and documents uploaded successfully"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        )

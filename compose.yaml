@@ -13,7 +13,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     networks:
       - app_network
 
@@ -29,7 +29,7 @@ services:
     ports:
       - "5433:5432"  # Puerto diferente para evitar conflictos
     volumes:
-      - test_postgres_data:/var/lib/postgresql/data
+      - test_postgres_data:/var/lib/postgresql
     networks:
       - app_network
     profiles:
