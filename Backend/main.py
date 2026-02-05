@@ -4,13 +4,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from sqlmodel import Session, select
-from infrastructure.database.database import create_db_and_tables, engine
-from presentation.routers.auth import crypt
-from domain.entities.users import User
-from presentation.api.v1.routers import router
-from domain.entities.statuses import Status
+from src.database.database import create_db_and_tables, engine
+from passlib.context import CryptContext
+from src.modules.users.domain.entities.entities import User
+from src.modules.auth.presentation.api.v1.auth_routers import auth_router as router
+# from domain.entities.statuses import Status
 
-
+crypt = CryptContext(schemes=["bcrypt"], deprecated="auto")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Create the database and tables at startup
@@ -57,20 +57,20 @@ async def lifespan(app: FastAPI):
             print(
                 "El usuario administrador por defecto ya existe. Omitiendo la creación."
             )
-        default_status = Status(
-            nombre="EN REVISION",
-            descripcion="Documento en proceso de revisión",
-        )
-        # Verificar si el estado por defecto ya existe
-        statement = select(Status).where(Status.nombre == default_status.nombre)
-        existing_status = session.exec(statement).first()   
-        if not existing_status:
-            session.add(default_status)
-            session.commit()
-            session.refresh(default_status)
-            print(f"Estado por defecto creado: {default_status.nombre}")
-        else:
-            print("El estado por defecto ya existe. Omitiendo la creación.")
+        # default_status = Status(
+        #     nombre="EN REVISION",
+        #     descripcion="Documento en proceso de revisión",
+        # )
+        # # Verificar si el estado por defecto ya existe
+        # statement = select(Status).where(Status.nombre == default_status.nombre)
+        # existing_status = session.exec(statement).first()   
+        # if not existing_status:
+        #     session.add(default_status)
+        #     session.commit()
+        #     session.refresh(default_status)
+        #     print(f"Estado por defecto creado: {default_status.nombre}")
+        # else:
+        #     print("El estado por defecto ya existe. Omitiendo la creación.")
         yield  # Yield es para que FastAPI pueda iniciar y ejecutar la aplicación
     # Here you could add any cleanup code if needed
 
@@ -99,7 +99,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
-    expose_headers=["Set-Cookie"],  # Importante para manejar cookies
+    # expose_headers=["Set-Cookie"],  # Importante para manejar cookies
 )
 
 # # Main endpoint

@@ -1,12 +1,12 @@
 import bcrypt
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from sqlmodel import Session, select
 
-from ..domain.interfaces.auth_interface import IAuthRepository
-from ..domain.entities.auth_token import AuthToken, User
-from domain.entities.users import Users  # Asumiendo que existe la entidad User en el dominio principal
+from src.modules.auth.domain.interfaces.auth_interface import IAuthRepository
+from src.modules.auth.domain.entities.auth_token import AuthToken, AuthUser
+from src.modules.users.domain.entities.entities import User  # Asumiendo que existe la entidad User en el dominio principal
 
 
 class AuthRepository(IAuthRepository):
@@ -20,7 +20,7 @@ class AuthRepository(IAuthRepository):
         """
         try:
             # Find user by email
-            statement = select(Users).where(Users.email == email)
+            statement = select(User).where(User.email == email)
             result = self.db.exec(statement)
             user_db = result.first()
 
@@ -28,7 +28,7 @@ class AuthRepository(IAuthRepository):
                 return None
 
             # Verify password
-            if not bcrypt.checkpw(password.encode('utf-8'), user_db.password.encode('utf-8')):
+            if not bcrypt.checkpw(password.encode('utf-8'), user_db.password_hash.encode('utf-8')):
                 return None
 
             # Generate tokens
@@ -36,9 +36,9 @@ class AuthRepository(IAuthRepository):
             refresh_token = self._generate_refresh_token(user_db)
 
             # Create user object
-            user = User(
+            user = AuthUser(
                 id=user_db.id,
-                name=user_db.name or user_db.email,
+                name=user_db.nombre_completo or user_db.email,
                 email=user_db.email,
                 role=self._get_user_role(user_db)
             )
@@ -67,7 +67,7 @@ class AuthRepository(IAuthRepository):
                 return None
 
             # Find user by ID
-            statement = select(Users).where(Users.id == user_id)
+            statement = select(User).where(User.id == user_id)
             result = self.db.exec(statement)
             user_db = result.first()
 
@@ -79,9 +79,9 @@ class AuthRepository(IAuthRepository):
             new_refresh_token = self._generate_refresh_token(user_db)
 
             # Create user object
-            user = User(
+            user = AuthUser(
                 id=user_db.id,
-                name=user_db.name or user_db.email,
+                name=user_db.nombre_completo or user_db.email,
                 email=user_db.email,
                 role=self._get_user_role(user_db)
             )
@@ -105,12 +105,12 @@ class AuthRepository(IAuthRepository):
         """
         Generate access token for user
         """
-        expiry = datetime.utcnow() + timedelta(hours=1)
+        expiry = datetime.now(timezone.utc) + timedelta(hours=1)
         payload = {
             "sub": str(user.id),
             "email": user.email,
             "exp": expiry,
-            "iat": datetime.utcnow(),
+            "iat": datetime.now(timezone.utc),
             "type": "access"
         }
         return jwt.encode(payload, self.secret_key, algorithm="HS256")
@@ -119,17 +119,17 @@ class AuthRepository(IAuthRepository):
         """
         Generate refresh token for user
         """
-        expiry = datetime.utcnow() + timedelta(days=7)
+        expiry = datetime.now(timezone.utc) + timedelta(days=7)
         payload = {
             "sub": str(user.id),
             "email": user.email,
             "exp": expiry,
-            "iat": datetime.utcnow(),
+            "iat": datetime.now(timezone.utc),
             "type": "refresh"
         }
         return jwt.encode(payload, self.secret_key, algorithm="HS256")
 
-    def _get_user_role(self, user) -> str:
+    def _get_user_role(self, user:User) -> str:
         """
         Determine user role based on user attributes
         """

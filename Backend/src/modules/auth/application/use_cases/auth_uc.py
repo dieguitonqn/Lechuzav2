@@ -1,6 +1,6 @@
 from typing import Optional
-from ..domain.interfaces.auth_interface import IAuthRepository
-from .dtos.auth_dto import LoginResponse, UserResponse
+from src.modules.auth.domain.interfaces.auth_interface import IAuthRepository
+from ..dtos.auth_dto import LoginResponse, UserResponse
 
 
 class AuthUseCase:

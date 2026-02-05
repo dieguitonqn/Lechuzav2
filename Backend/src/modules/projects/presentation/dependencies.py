@@ -2,7 +2,7 @@ from fastapi import Depends
 from sqlmodel import Session
 from infrastructure.database.database import get_session
 from src.modules.projects.application.use_cases import ProjectUseCase
-from src.modules.projects.infrastructure.repository_impl import SQLModelProjectRepository
+from src.modules.projects.infrastructure.repository import SQLModelProjectRepository
 from infrastructure.storage.file_managment_repo import FileManager
 
 

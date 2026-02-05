@@ -1,17 +1,15 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
-
-@dataclass
-class User:
+class AuthUser(BaseModel):
     id: int
     name: str
     email: str
     role: str
 
 
-@dataclass
-class AuthToken:
+    
+class AuthToken(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str
-    user: User
+    user: AuthUser

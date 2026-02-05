@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Sequence, Optional
-from src.modules.users.domain.entities import User
+from src.modules.users.domain.entities.entities import User
 
 
 class IUserRepository(ABC):

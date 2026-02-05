@@ -1,5 +1,5 @@
 from sqlmodel import create_engine, Session, SQLModel
-from infrastructure.database.config import settings
+from .config import settings
 
 # Configura el engine de SQLModel(SQLAlchemy) para PostgreSQL
 

@@ -3,7 +3,7 @@ from typing import Optional, Sequence
 from fastapi import Depends
 from infrastructure.database.database import get_session
 from src.modules.projects.application.dtos import ProjectCreateDTO
-from src.modules.projects.domain.repository import IProject
+from src.modules.projects.domain.interfaces import IProject
 from src.modules.projects.domain.entities import Project
 
 
