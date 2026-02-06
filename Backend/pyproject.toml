@@ -79,6 +79,7 @@ dependencies = [
     "watchdog==6.0.0",
     "docopt==0.6.2",
     "mypy>=1.18.2",
+    "pwdlib[argon2]>=0.3.0",
 ]
 
 [dependency-groups]

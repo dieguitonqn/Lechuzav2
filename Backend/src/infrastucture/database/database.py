@@ -22,7 +22,7 @@ def create_db_and_tables():
     # Importa el paquete que a su vez importa/reexporta los modelos
     # (ver `domain/entities/__init__.py`) — esto provoca los side-effects necesarios
     # para que SQLModel registre las clases.
-    importlib.import_module("domain.entities")
+    importlib.import_module("src.domain.entities")
 
     # Crear las tablas basándose en los modelos importados
     SQLModel.metadata.create_all(engine)

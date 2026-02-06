@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Optional, Sequence
 from src.modules.projects.application.dtos import ProjectCreateDTO
-from src.modules.projects.domain.repository import IProject
+from src.modules.projects.domain.interfaces import IProject
 from src.modules.projects.domain.entities import Project
 from infrastructure.storage.file_managment_repo import IFileManager
 

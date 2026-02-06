@@ -3,10 +3,19 @@ import jwt
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from sqlmodel import Session, select
+from pwdlib import PasswordHash
 
 from src.modules.auth.domain.interfaces.auth_interface import IAuthRepository
 from src.modules.auth.domain.entities.auth_token import AuthToken, AuthUser
-from src.modules.users.domain.entities.entities import User  # Asumiendo que existe la entidad User en el dominio principal
+from src.domain.entities.users import User  # Asumiendo que existe la entidad User en el dominio principal
+
+SECRET_KEY = "your"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_HOURS = 24
+REFRESH_TOKEN_EXPIRE_DAYS = 7
+
+
+password_hash = PasswordHash.recommended()
 
 
 class AuthRepository(IAuthRepository):
@@ -28,7 +37,7 @@ class AuthRepository(IAuthRepository):
                 return None
 
             # Verify password
-            if not bcrypt.checkpw(password.encode('utf-8'), user_db.password_hash.encode('utf-8')):
+            if not password_hash.verify(password, user_db.password_hash):
                 return None
 
             # Generate tokens
@@ -105,7 +114,7 @@ class AuthRepository(IAuthRepository):
         """
         Generate access token for user
         """
-        expiry = datetime.now(timezone.utc) + timedelta(hours=1)
+        expiry = datetime.now(timezone.utc) + timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
         payload = {
             "sub": str(user.id),
             "email": user.email,

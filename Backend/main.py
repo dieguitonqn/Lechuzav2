@@ -4,13 +4,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from sqlmodel import Session, select
-from src.database.database import create_db_and_tables, engine
+from src.infrastucture.database.database import create_db_and_tables, engine
 from passlib.context import CryptContext
-from src.modules.users.domain.entities.entities import User
-from src.modules.auth.presentation.api.v1.auth_routers import auth_router as router
-# from domain.entities.statuses import Status
+from src.domain.entities.users import User
+from src.domain.entities.statuses import Status
+from src.modules.routers import module_routers as router
+from pwdlib import PasswordHash
+
 
 crypt = CryptContext(schemes=["bcrypt"], deprecated="auto")
+argon2_hash = PasswordHash("argon2").recommended()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Create the database and tables at startup
@@ -37,7 +40,7 @@ async def lifespan(app: FastAPI):
                 email="admin@email.com",
                 # Guarda la contraseña hasheada, no en texto plano.
                 # password="$2y$12$Xqb.PwbPpnzqxJ/tAKEnruwkPDuq7fAUu8TzhY28uL/iN6KjEa1Gi", #admin-password
-                password_hash=crypt.hash("admin-password"),  # Hasheamos la contraseña
+                password_hash=argon2_hash.hash("admin-password"),  # Hasheamos la contraseña
                 is_active=True,
                 is_verified=True,
                 is_admin=True,
@@ -57,20 +60,20 @@ async def lifespan(app: FastAPI):
             print(
                 "El usuario administrador por defecto ya existe. Omitiendo la creación."
             )
-        # default_status = Status(
-        #     nombre="EN REVISION",
-        #     descripcion="Documento en proceso de revisión",
-        # )
-        # # Verificar si el estado por defecto ya existe
-        # statement = select(Status).where(Status.nombre == default_status.nombre)
-        # existing_status = session.exec(statement).first()   
-        # if not existing_status:
-        #     session.add(default_status)
-        #     session.commit()
-        #     session.refresh(default_status)
-        #     print(f"Estado por defecto creado: {default_status.nombre}")
-        # else:
-        #     print("El estado por defecto ya existe. Omitiendo la creación.")
+        default_status = Status(
+            nombre="EN REVISION",
+            descripcion="Documento en proceso de revisión",
+        )
+        # Verificar si el estado por defecto ya existe
+        statement = select(Status).where(Status.nombre == default_status.nombre)
+        existing_status = session.exec(statement).first()   
+        if not existing_status:
+            session.add(default_status)
+            session.commit()
+            session.refresh(default_status)
+            print(f"Estado por defecto creado: {default_status.nombre}")
+        else:
+            print("El estado por defecto ya existe. Omitiendo la creación.")
         yield  # Yield es para que FastAPI pueda iniciar y ejecutar la aplicación
     # Here you could add any cleanup code if needed
 
