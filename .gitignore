@@ -27,4 +27,4 @@ __pycache__/
 
 
 # Ignorar archivos subidos por el usuario
-files/
+files/Frontend/.env.local
