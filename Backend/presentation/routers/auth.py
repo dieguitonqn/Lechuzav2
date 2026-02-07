@@ -1,4 +1,3 @@
-from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from pydantic import BaseModel
 from sqlmodel import Session, select
@@ -9,7 +8,6 @@ from fastapi.security import OAuth2PasswordBearer
 import jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
-from fastapi_nextauth_jwt import NextAuthJWT
 # from jose import jwt, jwe, JWTError, JWSError, ExpiredSignatureError
 
 
@@ -26,12 +24,8 @@ oauth2 = OAuth2PasswordBearer(tokenUrl="/auth/login")
 crypt = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
 SECRET_KEY = "secreta_posta"
-AUTH_SECRET = "vgzX25nZEv0di8k5vV8XyPjFGDUaMS1DOs5IncjtmRc="
 TOKEN_EXPIRATION_TIME = timedelta(minutes=1)
 
-JWT = NextAuthJWT(
-    secret=AUTH_SECRET,
-)
 
 
 async def verify_password(user: User, password: str):
@@ -151,18 +145,13 @@ async def login(
 async def return_mw(
     # resp:Response,
     # Cookie: Annotated[str, Cookie()],
-    jwt_token: Annotated[dict, Depends(JWT)],
     session: Session = Depends(get_session),
 ):
-    print(f"EL jwt es: {jwt_token}")
     # if not Cookie:
     #     raise HTTPException(status_code=401, detail="Token not provided")
     # print(f"Access token received: {Cookie}")
 
-    email = jwt_token.get("email")
-    print(f"Email from token: {email}")
-    statement = select(User).where(User.email == email)
-    user = session.exec(statement).first()
+    user = session.exec().first()
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
