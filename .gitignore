@@ -1,8 +1,8 @@
 
 # Ignorar directorios de módulos y entornos virtuales
 # README.md
-.env
-.env.*
+.env*
+.env.local
 **/.venv/
 **/node_modules/
 **/venv/
