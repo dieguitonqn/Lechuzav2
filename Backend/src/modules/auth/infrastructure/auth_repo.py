@@ -9,7 +9,7 @@ from src.modules.auth.domain.interfaces.auth_interface import IAuthRepository
 from src.modules.auth.domain.entities.auth_token import AuthToken, AuthUser
 from src.domain.entities.users import User  # Asumiendo que existe la entidad User en el dominio principal
 
-SECRET_KEY = "your"
+SECRET_KEY = "la-secret-reposta-que-deberia-estar-en-variables-de-entorno"  # En producción, esto debe ser una variable de entorno segura
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 24
 REFRESH_TOKEN_EXPIRE_DAYS = 7
@@ -19,7 +19,7 @@ password_hash = PasswordHash.recommended()
 
 
 class AuthRepository(IAuthRepository):
-    def __init__(self, db: Session, secret_key: str = "your-secret-key"):
+    def __init__(self, db: Session, secret_key: str = SECRET_KEY):
         self.db = db
         self.secret_key = secret_key
 
@@ -34,10 +34,12 @@ class AuthRepository(IAuthRepository):
             user_db = result.first()
 
             if not user_db:
+                print(f"No user found with email: {email}")
                 return None
 
             # Verify password
             if not password_hash.verify(password, user_db.password_hash):
+                print(f"Invalid password for email: {email}")
                 return None
 
             # Generate tokens
@@ -69,7 +71,7 @@ class AuthRepository(IAuthRepository):
         """
         try:
             # Decode refresh token
-            payload = jwt.decode(refresh_token, self.secret_key, algorithms=["HS256"])
+            payload = jwt.decode(refresh_token, self.secret_key, algorithms=[ALGORITHM])
             user_id = payload.get("sub")
 
             if not user_id:
@@ -85,6 +87,7 @@ class AuthRepository(IAuthRepository):
 
             # Generate new tokens
             access_token = self._generate_access_token(user_db)
+            print(f"Generated access token: {access_token}")
             new_refresh_token = self._generate_refresh_token(user_db)
 
             # Create user object
@@ -110,7 +113,7 @@ class AuthRepository(IAuthRepository):
             print(f"Error refreshing token: {e}")
             return None
 
-    def _generate_access_token(self, user) -> str:
+    def _generate_access_token(self, user:User) -> str:
         """
         Generate access token for user
         """
@@ -122,9 +125,10 @@ class AuthRepository(IAuthRepository):
             "iat": datetime.now(timezone.utc),
             "type": "access"
         }
-        return jwt.encode(payload, self.secret_key, algorithm="HS256")
+        print(f"Generating access token for user {user.email} with payload: {payload}")
+        return jwt.encode(payload, self.secret_key, algorithm=ALGORITHM)
 
-    def _generate_refresh_token(self, user) -> str:
+    def _generate_refresh_token(self, user:User) -> str:
         """
         Generate refresh token for user
         """
@@ -136,7 +140,7 @@ class AuthRepository(IAuthRepository):
             "iat": datetime.now(timezone.utc),
             "type": "refresh"
         }
-        return jwt.encode(payload, self.secret_key, algorithm="HS256")
+        return jwt.encode(payload, self.secret_key, algorithm=ALGORITHM)
 
     def _get_user_role(self, user:User) -> str:
         """

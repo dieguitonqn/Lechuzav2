@@ -1,77 +1,69 @@
 // middleware.ts
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const loginRoute = "/";
+const loginRoute = "/auth/signin";
+const publicRoutes = ["/", "/login", "/register"];
+const adminRoutes = ["/settings", "/admin"];
 
 export async function middleware(request: NextRequest) {
-  const bearerToken = request.cookies.get("access_token");
-  const authToken = request.cookies.get("authjs.session-token");
-  const cookies = request.cookies;
-  console.log("Cookies:", cookies);
-  let Token = null;
-  if (bearerToken){
-    Token = bearerToken;
-  }else if (authToken) {
-    Token = authToken;
+  const { pathname } = request.nextUrl;
+  
+  console.log("🚀 Middleware ejecutándose para:", pathname); // Debug log
+  
+  // Verificar si es una ruta pública
+  const isPublicRoute = publicRoutes.some(
+    (route) => pathname === route
+  );
+  
+  console.log("📍 Es ruta pública?:", isPublicRoute); // Debug log
+  
+  // Obtener la sesión
+  const session = await auth();
+  console.log("👤 Sesión encontrada?:", !!session); // Debug log
+
+  if (session && isPublicRoute && pathname.startsWith(loginRoute)) {
+    console.log("🔄 Redirigiendo a /main - Usuario autenticado en ruta pública");
+    return NextResponse.redirect(new URL("/main", request.url));
   }
-//  if (authToken){
-//   return NextResponse.next();
-//  }
-  // console.log("Cookies:", cookies);
-  if (!Token) {
-    return NextResponse.redirect(new URL(loginRoute, request.url));
+  
+  // Si no hay sesión y no es una ruta pública
+  if (!session && !isPublicRoute) {
+    console.log("🔒 Bloqueando acceso - Sin sesión"); // Debug log
+    const loginUrl = new URL(loginRoute, request.url);
+    loginUrl.searchParams.set("callbackUrl", request.url);
+    return NextResponse.redirect(loginUrl);
   }
-
-  try {
-    console.log("Validating token via cookie...");
-    const response = await fetch(`${process.env.MW_URL}`, {
-      method: "GET",
-      headers: {
-      // Enviar el token como una cookie en el encabezado 'Cookie'
-      'Cookie': `${Token.name}=${Token.value}`,
-      },
-    });
-
-    // 3. Si la respuesta del backend es exitosa (200 OK)
-    if (response.ok) {
-      // Tomar la cookie de la respuesta del backend
-      const newCookie = response.headers.get('Set-Cookie');
-
-      // // La solicitud a la página protegida puede continuar.
-      const res = NextResponse.next();
-
-      // // 4. Reescribir la cookie en la respuesta al navegador
-      if (newCookie) {
-        res.headers.set('Set-Cookie', newCookie);
-      }
-
-      return res;
-    }
-
-    // 5. Si la respuesta no es 200 (ej. 401 Unauthorized)
-    else {
-      // Redirigir al login y borrar la cookie inválida
-      const res = NextResponse.redirect(new URL(loginRoute, request.url));
-      res.cookies.delete("access_token");
-      return res;
-    }
-  } catch (error) {
-    console.error("Error en el middleware de autenticación:", error);
-    // En caso de error de red, redirigir al login por seguridad
-    const res = NextResponse.redirect(new URL(loginRoute, request.url));
-    res.cookies.delete("access_token");
-    return res;
-  }
+  
+  // Verificar rutas de administrador
+  // const isAdminRoute = adminRoutes.some(
+  //   (route) => pathname.startsWith(route)
+  // );
+  
+  // if (isAdminRoute && session) {
+  //   const isAdmin = session.user?.role === "admin";
+    
+  //   if (!isAdmin) {
+  //     return NextResponse.redirect(new URL("/main", request.url));
+  //   }
+  // }
+  
+  // // Si hay sesión y está en la página de login, redirigir al dashboard
+  // if (session && pathname === loginRoute) {
+  //   return NextResponse.redirect(new URL("/main", request.url));
+  // }
+  
+  console.log("✅ Permitiendo acceso"); // Debug log
+  return NextResponse.next();
 }
 
-// Configuración para el middleware.
 export const config = {
-  // Aquí puedes usar un matcher para que el middleware solo se ejecute en ciertas rutas
   matcher: [
     "/dashboard/:path*",
     "/projects/:path*",
-    "/main/:path*",
+    "/main/:path*", 
     "/settings/:path*",
+    "/",
   ],
 };

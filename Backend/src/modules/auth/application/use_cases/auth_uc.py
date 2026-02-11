@@ -1,6 +1,7 @@
 from typing import Optional
 from src.modules.auth.domain.interfaces.auth_interface import IAuthRepository
 from ..dtos.auth_dto import LoginResponse, UserResponse
+from ...domain.entities.auth_token import AuthToken, AuthUser
 
 
 class AuthUseCase:
@@ -16,7 +17,7 @@ class AuthUseCase:
             raise ValueError("Email and password are required")
 
         # Authenticate user
-        auth_token = await self.auth_repository.authenticate_user(email, password)
+        auth_token:AuthToken = await self.auth_repository.authenticate_user(email, password)
         
         if not auth_token:
             return None

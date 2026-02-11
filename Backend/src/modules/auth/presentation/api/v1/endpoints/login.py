@@ -24,6 +24,7 @@ async def login(
         result = await auth_uc.login(login_data.email, login_data.password)
         
         if not result:
+            print("Authentication failed for email:", login_data.email)
             raise HTTPException(
                 status_code=401,
                 detail="Invalid email or password"

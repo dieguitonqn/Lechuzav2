@@ -66,20 +66,20 @@ export default function SignIn() {
                         <div className="max-w-7xl mx-auto">
                             <div className="flex justify-between items-center">
                                 {/* Columna izquierda */}
-                                <div className="flex flex-col">
-                                    <Image 
-                                    src={"/EPENLogo.png"}
-                                    alt="EPEN Logo"
-                                    width={300}
-                                    height={300}
-                                    className="mb-4 w-24 h-24 lg:w-36 lg:h-36 object-contain bg-slate-50/5 rounded-full p-2"
+                                <div className="flex flex-col m-5">
+                                    <Image
+                                        src={"/EPENLogo.png"}
+                                        alt="EPEN Logo"
+                                        width={300}
+                                        height={300}
+                                        className="mb-4 w-24 h-24 lg:w-36 lg:h-36 object-contain bg-slate-50/5 rounded-full p-2"
                                     />
 
                                 </div>
 
                                 {/* Columna derecha */}
-                                
-                                <div className="flex flex-col">
+
+                                <div className="flex flex-col m-5">
                                     <h1 className="text-2xl lg:text-4xl font-bold mb-1">Lechuza</h1>
                                     <p className="text-sm lg:text-lg text-gray-200">Sistema de Gestión Documental de Obras</p>
                                     <p className="mt-1 lg:mt-2 max-w-md text-gray-300 text-sm lg:text-base">EPEN - Ente Provincial de Energía de Neuquén</p>
@@ -93,8 +93,15 @@ export default function SignIn() {
                 <div className="flex-[1] flex items-center justify-center p-8 bg-white">
                     <div className="w-full max-w-md">
                         <div className="text-center mb-8">
-                            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl mb-4">
-                                <span className="text-2xl">🦉</span>
+                            <div className="inline-flex items-center justify-center w-24 h-24  rounded-2xl mb-4">
+                                <div>
+                                    <Image
+                                        src={"/lechu_logo_new.jpg"}
+                                        alt="EPEN Logo"
+                                        width={200}
+                                        height={200}
+                                    />
+                                </div>
                             </div>
                             <h2 className="text-2xl font-bold text-gray-900 mb-2">Inicio de sesión</h2>
                             <p className="text-gray-600">Accede a tu cuenta de Lechuza</p>
@@ -110,7 +117,7 @@ export default function SignIn() {
                                     name="email"
                                     type="email"
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
                                     placeholder="usuario@epen.gov.ar"
                                 />
                             </div>
@@ -124,7 +131,7 @@ export default function SignIn() {
                                     name="password"
                                     type="password"
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -138,7 +145,7 @@ export default function SignIn() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                                className="w-full bg-gradient-to-r from-red-600 to-pink-600 text-white py-3 px-4 rounded-xl font-medium hover:from-red-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                             >
                                 {isLoading ? (
 

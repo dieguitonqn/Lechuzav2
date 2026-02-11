@@ -1,7 +1,7 @@
 from pydantic import BaseModel
-
+from uuid import UUID
 class AuthUser(BaseModel):
-    id: int
+    id: UUID
     name: str
     email: str
     role: str

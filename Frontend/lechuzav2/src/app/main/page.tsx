@@ -1,7 +1,9 @@
 import React, { use } from 'react'
+import { auth } from "@/auth"
 
-function Main() {
 
+export default async function Main() {
+const session = await auth();
 
   return (
     <div>
@@ -9,5 +11,3 @@ function Main() {
     </div>
   )
 }
-
-export default Main
