@@ -1,9 +1,10 @@
 from pathlib import Path
 from typing import Optional, Sequence
+from uuid import UUID
 from src.modules.projects.application.dtos import ProjectCreateDTO
-from src.modules.projects.domain.interfaces import IProject
-from src.modules.projects.domain.entities import Project
-from infrastructure.storage.file_managment_repo import IFileManager
+from src.modules.projects.domain.interfaces import IProject, IFileManager
+from src.domain.entities.projects import Project
+
 
 
 class ProjectUseCase:
@@ -41,6 +42,6 @@ class ProjectUseCase:
             raise Exception("Project not found")
         return project
 
-    def list_projects(self) -> Optional[Sequence[Project]]:
-        projects: Optional[Sequence[Project]] = self.project_repo.list_projects()
+    def list_projects(self, user_id:UUID) -> Optional[Sequence[Project]]:
+        projects: Optional[Sequence[Project]] = self.project_repo.list_projects(user_id)
         return projects

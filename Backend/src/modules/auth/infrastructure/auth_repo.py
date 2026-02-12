@@ -1,18 +1,22 @@
-import bcrypt
+import os
 import jwt
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from sqlmodel import Session, select
 from pwdlib import PasswordHash
+from dotenv import load_dotenv
 
 from src.modules.auth.domain.interfaces.auth_interface import IAuthRepository
 from src.modules.auth.domain.entities.auth_token import AuthToken, AuthUser
 from src.domain.entities.users import User  # Asumiendo que existe la entidad User en el dominio principal
 
-SECRET_KEY = "la-secret-reposta-que-deberia-estar-en-variables-de-entorno"  # En producción, esto debe ser una variable de entorno segura
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_HOURS = 24
-REFRESH_TOKEN_EXPIRE_DAYS = 7
+# Cargar variables de entorno
+load_dotenv()
+
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRE_HOURS", "24"))
+REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("JWT_REFRESH_TOKEN_EXPIRE_DAYS", "7"))
 
 
 password_hash = PasswordHash.recommended()

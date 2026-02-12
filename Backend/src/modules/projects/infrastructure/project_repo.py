@@ -1,10 +1,11 @@
 from sqlmodel import Session, select
 from typing import Optional, Sequence
 from fastapi import Depends
-from infrastructure.database.database import get_session
+from src.infrastucture.database.database import get_session
 from src.modules.projects.application.dtos import ProjectCreateDTO
 from src.modules.projects.domain.interfaces import IProject
-from src.modules.projects.domain.entities import Project
+from src.domain.entities.projects import Project
+from src.domain.entities.models_links import ProjectUserLink
 
 
 class SQLModelProjectRepository(IProject):
@@ -38,6 +39,11 @@ class SQLModelProjectRepository(IProject):
         project: Optional[Project] = self.session.get(Project, project_id)
         return project
 
-    def list_projects(self) -> Optional[Sequence[Project]]:
-        projects: Optional[Sequence[Project]] = self.session.exec(select(Project)).all()
+    def list_projects(self, user_id: str) -> Optional[Sequence[Project]]:
+        user_projects_links: Optional[Sequence[ProjectUserLink]] = self.session.exec(
+            select(ProjectUserLink).where(ProjectUserLink.user_id == user_id)
+        ).all()
+        project_ids = [link.project_id for link in user_projects_links]
+        
+        projects: Optional[Sequence[Project]] = self.session.exec(select(Project).where(Project.id.in_(project_ids))).all()
         return projects

@@ -8,7 +8,9 @@ from src.infrastucture.database.database import create_db_and_tables, engine
 from passlib.context import CryptContext
 from src.domain.entities.users import User
 from src.domain.entities.statuses import Status
-from src.modules.routers import module_routers as router
+from src.domain.entities.projects import Project
+from src.domain.entities.models_links import ProjectUserLink
+from src.modules.routers import module_routers
 from pwdlib import PasswordHash
 
 
@@ -74,6 +76,49 @@ async def lifespan(app: FastAPI):
             print(f"Estado por defecto creado: {default_status.nombre}")
         else:
             print("El estado por defecto ya existe. Omitiendo la creación.")
+#---------------------------------------------------------------------------------------------
+#-----------------------PROYECTO DEFECTO-----------------------
+        default_project = Project(
+            nombre="Proyecto por defecto",
+            codigo="PRY-001",
+            descripcion="Este es un proyecto creado por defecto al iniciar la aplicación.",
+            
+        )
+        # Verificar si el proyecto por defecto ya existe
+        statement = select(Project).where(Project.nombre == default_project.nombre)
+        existing_project = session.exec(statement).first()
+        if not existing_project:
+            session.add(default_project)
+            session.commit()
+            session.refresh(default_project)
+            print(f"Proyecto por defecto creado: {default_project.nombre}")
+        else:
+            print("El proyecto por defecto ya existe. Omitiendo la creación.")
+#---------------------------------------------------------------------------------------------
+#-----------------------Model Link DEFECTO-----------------------
+        if existing_admin and existing_project:
+            # Verificar si el enlace por defecto ya existe
+            statement = select(ProjectUserLink).where(
+                (ProjectUserLink.project_id == existing_project.id) &
+                (ProjectUserLink.user_id == existing_admin.id)
+            )
+            existing_link = session.exec(statement).first()
+            if not existing_link:
+                default_link = ProjectUserLink(
+                    project_id=existing_project.id,
+                    user_id=existing_admin.id,
+                    can_view_docs=True,
+                    can_upload_docs=True,
+                    can_correct_docs=True
+                )
+                session.add(default_link)
+                session.commit()
+                print(f"Enlace por defecto creado entre el proyecto '{existing_project.nombre}' y el usuario '{existing_admin.email}'.")
+            else:
+                print("El enlace por defecto ya existe. Omitiendo la creación.")
+
+
+
         yield  # Yield es para que FastAPI pueda iniciar y ejecutar la aplicación
     # Here you could add any cleanup code if needed
 
@@ -81,7 +126,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # Routers
-app.include_router(router, prefix="/api/v1", tags=["v1"])
+app.include_router(module_routers, prefix="/api/v1", tags=["v1"])
 
 # app.include_router(users.users, prefix="/api", tags=["users"])
 # app.include_router(auth.router, prefix="/api", tags=["auth"])

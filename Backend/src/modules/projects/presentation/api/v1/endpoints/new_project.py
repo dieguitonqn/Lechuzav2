@@ -1,16 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form, File, UploadFile
 from typing import Optional
 import uuid
-from src.modules.projects.presentation.dependencies import get_project_uc
+from src.modules.projects.presentation.api.v1.dependencies import get_project_uc
 from src.modules.projects.application.use_cases import ProjectUseCase
 from src.modules.projects.application.dtos import ProjectCreateDTO
-from src.modules.projects.domain.entities import Project
+from src.domain.entities.projects import Project
 
 
-router = APIRouter(prefix="/projects")
+new_project_router = APIRouter(prefix="/projects")
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@new_project_router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_project(
     name: str = Form(...),
     code: str = Form(...),

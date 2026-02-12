@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional, Sequence
 from src.modules.projects.application.dtos import ProjectCreateDTO
-from src.modules.projects.domain.entities import Project
+from src.domain.entities.projects import Project
 
 
 class IProject(ABC):
@@ -18,5 +18,11 @@ class IProject(ABC):
         pass
 
     @abstractmethod
-    def list_projects(self) -> Optional[Sequence[Project]]:
+    def list_projects(self, user_id: str) -> Optional[Sequence[Project]]:
+        pass
+
+
+class IFileManager(ABC):
+    @abstractmethod
+    async def save_file(self, file: bytes, destination_path: str) -> Optional[str]:
         pass
