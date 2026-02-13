@@ -21,7 +21,7 @@ async def login(
     """
     try:
         # Authenticate user
-        result = await auth_uc.login(login_data.email, login_data.password)
+        result:LoginResponse = await auth_uc.login(login_data.email, login_data.password)
         
         if not result:
             print("Authentication failed for email:", login_data.email)

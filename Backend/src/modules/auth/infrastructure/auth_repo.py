@@ -4,26 +4,17 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 from sqlmodel import Session, select
 from pwdlib import PasswordHash
-from dotenv import load_dotenv
 
+from src.config import settings
 from src.modules.auth.domain.interfaces.auth_interface import IAuthRepository
 from src.modules.auth.domain.entities.auth_token import AuthToken, AuthUser
 from src.domain.entities.users import User  # Asumiendo que existe la entidad User en el dominio principal
-
-# Cargar variables de entorno
-load_dotenv()
-
-SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRE_HOURS", "24"))
-REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("JWT_REFRESH_TOKEN_EXPIRE_DAYS", "7"))
-
 
 password_hash = PasswordHash.recommended()
 
 
 class AuthRepository(IAuthRepository):
-    def __init__(self, db: Session, secret_key: str = SECRET_KEY):
+    def __init__(self, db: Session, secret_key: str = settings.JWT_SECRET_KEY):
         self.db = db
         self.secret_key = secret_key
 
@@ -75,7 +66,7 @@ class AuthRepository(IAuthRepository):
         """
         try:
             # Decode refresh token
-            payload = jwt.decode(refresh_token, self.secret_key, algorithms=[ALGORITHM])
+            payload = jwt.decode(refresh_token, self.secret_key, algorithms=[settings.JWT_ALGORITHM])
             user_id = payload.get("sub")
 
             if not user_id:
@@ -121,7 +112,7 @@ class AuthRepository(IAuthRepository):
         """
         Generate access token for user
         """
-        expiry = datetime.now(timezone.utc) + timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
+        expiry = datetime.now(timezone.utc) + timedelta(hours=settings.JWT_ACCESS_TOKEN_EXPIRE_HOURS)
         payload = {
             "sub": str(user.id),
             "email": user.email,
@@ -129,14 +120,16 @@ class AuthRepository(IAuthRepository):
             "iat": datetime.now(timezone.utc),
             "type": "access"
         }
+        
         print(f"Generating access token for user {user.email} with payload: {payload}")
-        return jwt.encode(payload, self.secret_key, algorithm=ALGORITHM)
+        print (f"Using secret key: {self.secret_key} and algorithm: {settings.JWT_ALGORITHM}")
+        return jwt.encode(payload, str(self.secret_key), algorithm=settings.JWT_ALGORITHM)
 
     def _generate_refresh_token(self, user:User) -> str:
         """
         Generate refresh token for user
         """
-        expiry = datetime.now(timezone.utc) + timedelta(days=7)
+        expiry = datetime.now(timezone.utc) + timedelta(days=settings.JWT_REFRESH_TOKEN_EXPIRE_DAYS)
         payload = {
             "sub": str(user.id),
             "email": user.email,
@@ -144,7 +137,7 @@ class AuthRepository(IAuthRepository):
             "iat": datetime.now(timezone.utc),
             "type": "refresh"
         }
-        return jwt.encode(payload, self.secret_key, algorithm=ALGORITHM)
+        return jwt.encode(payload, self.secret_key, algorithm=settings.JWT_ALGORITHM)
 
     def _get_user_role(self, user:User) -> str:
         """

@@ -15,7 +15,7 @@ class AuthUseCase:
         # Validate input
         if not email or not password:
             raise ValueError("Email and password are required")
-
+        print(f"Attempting to authenticate user with email: {email} and password: {password}")
         # Authenticate user
         auth_token:AuthToken = await self.auth_repository.authenticate_user(email, password)
         

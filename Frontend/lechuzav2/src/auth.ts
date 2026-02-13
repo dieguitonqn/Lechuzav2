@@ -27,6 +27,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       },
       async authorize(credentials) {
+        console.log("🚀 Configurando proveedor de autenticación con credenciales") // Debug log
+
         const res = await fetch(`${process.env.AUTH_LOGIN_URL}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
