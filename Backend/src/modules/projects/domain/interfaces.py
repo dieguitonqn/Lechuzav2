@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional, Sequence
+from uuid import UUID
 from src.modules.projects.application.dtos import ProjectCreateDTO
 from src.domain.entities.projects import Project
-
 
 class IProject(ABC):
     @abstractmethod
@@ -18,7 +18,7 @@ class IProject(ABC):
         pass
 
     @abstractmethod
-    def list_projects(self, user_id: str) -> Optional[Sequence[Project]]:
+    def list_projects(self, user_id: UUID) -> Optional[Sequence[Project]]:
         pass
 
 

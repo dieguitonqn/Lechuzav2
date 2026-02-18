@@ -14,7 +14,7 @@ class Company(SQLModel, table=True):
     nombre: str = Field(unique=True)
     codigo: Optional[str] = Field(unique=True, default=None)
     # Relación a los proyectos a través de la tabla intermedia
-    projects: Optional[List["Project"]] = Relationship(back_populates="companies")
+    projects: Optional[List["Project"]] = Relationship(back_populates="company")
     users: Optional[List["User"]] = Relationship(back_populates="company")
 
 

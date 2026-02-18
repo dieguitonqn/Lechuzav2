@@ -1,15 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { getSession } from "next-auth/react";
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      if (session?.user?.role === "admin") {
+        setIsAdmin(true);
+      }
+    };
+    fetchSession();
+  }, []);
 
   const menuItems = [
-    { name: "Dashboard", href: "/dashboard" },
-    { name: "Nuevo Proyecto", href: "/main/projects/" },
+    { name: "Dashboard", href: "/dashboard", adminOnly: true },
+    { name: "Nuevo Proyecto", href: "/main/new_project/" },
     { name: "Usuarios", href: "/users" },
     { name: "Ingresar Documentación", href: "/documents/new" },
     { name: "Corregir Documentación", href: "/documents/corrections" },
@@ -33,6 +46,7 @@ const Navbar = () => {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
               {menuItems.map((item) => (
+                isAdmin || !item.adminOnly ? (
                 <Link
                   key={item.name}
                   href={item.href}
@@ -40,7 +54,7 @@ const Navbar = () => {
                 >
                   {item.name}
                 </Link>
-              ))}
+              ) : null))}
             </div>
           </div>
 

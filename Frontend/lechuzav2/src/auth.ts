@@ -63,6 +63,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token
     },
+    async session({session,token}){
+      if(token){    
+        session.accessToken = token.accessToken as string
+        session.refreshToken = token.refreshToken as string
+        session.user.role = token.role as string
+
+      }
+      return session
+      
+    },
     async redirect({ url, baseUrl }) {
       
         return `${baseUrl}/main`

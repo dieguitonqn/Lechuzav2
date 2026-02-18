@@ -1,7 +1,7 @@
 "use client";
 
-import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +10,31 @@ export default function SignIn() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const router = useRouter();
+    const { data: session, status } = useSession();
+
+    // Redirect to /main if user is already logged in
+    useEffect(() => {
+        if (status === "authenticated") {
+            router.push("/main");
+        }
+    }, [status, router]);
+
+    // Show loading while checking authentication status
+    if (status === "loading") {
+        return (
+            <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                    <p className="text-white text-lg">Verificando sesión...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Don't render the form if already authenticated
+    if (status === "authenticated") {
+        return null;
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

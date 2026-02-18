@@ -32,10 +32,12 @@ class Project(SQLModel, table=True):
         back_populates="projects", link_model=ProjectUserLink
     )
     company_id: Optional[uuid.UUID] = Field(default=None, foreign_key="company.id")
-    companies: List["Company"] = Relationship(back_populates="projects")
+    company: Optional["Company"] = Relationship(back_populates="projects")
     documents: List["Document"] = Relationship(back_populates="project")
     contrato: Optional[str] = None
     contrato_url: Optional[str] = None
+    card_color: Optional[str] = 'red'  # Color por defecto para las tarjetas de proyectos
+
 
 
 class ProjectCreate(BaseModel):

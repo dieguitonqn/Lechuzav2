@@ -1,47 +1,49 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Header, Response
-from typing import Optional, List
+from fastapi import APIRouter, Depends, HTTPException
+from typing import List
+from src.modules.projects.application.dtos import ProjectWithCompanies, CompanyDTO
 from src.modules.projects.presentation.api.v1.dependencies import get_project_uc
 from src.modules.projects.application.use_cases import ProjectUseCase
-# from src.modules.projects.application.dtos import ProjectDTO
 from src.domain.entities.projects import Project
 from src.domain.entities.users import User
-from src.infrastucture.database.database import get_session
-import jwt
-import os
-from sqlmodel import Session
+from src.modules.auth.presentation.api.v1.dependencies.get_current_user import get_current_user
 
 
-get_projects_router = APIRouter(prefix="/projects")
+get_projects_router = APIRouter()
 
-async def get_current_user(db: Session = Depends(get_session), authorization: Optional[str] = Header(None)) -> User:
-    if not authorization:
-        print("Authorization header missing")
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authorization header missing")
-    token = authorization.split(" ")[1] if " " in authorization else None
 
-    if not token:
-        print("Invalid authorization header format:", authorization)
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authorization header format")
-    
-    payload = jwt.decode(token, os.getenv("JWT_SECRET_KEY"), algorithms=[os.getenv("JWT_ALGORITHM")])
-    user_id = payload.get("sub")
 
-    if not user_id:
-        print("Invalid token payload:", payload)
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
-    user_athenticated:User = db.get(User, user_id)
 
-    if not user_athenticated:
-        print ("User not found for ID:", user_id)
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
-    return user_athenticated
-    
+@get_projects_router.get("/", response_model=List[ProjectWithCompanies])
+async def get_projects(
+    project_uc: ProjectUseCase = Depends(get_project_uc), 
+    user: User = Depends(get_current_user)
+):
+    try:
+        projects: List[Project] = project_uc.list_projects(user.id)
+        response: List[ProjectWithCompanies] = []
+        for project in projects:
+            company_names = []
+            if project.company is not None:
+                company_names.append(project.company.nombre)
 
-@get_projects_router.get("/", response_model=List[Project], status_code=status.HTTP_200_OK)
-async def get_projects(project_uc: ProjectUseCase = Depends(get_project_uc), user: User = Depends(get_current_user)):
-    return Response(content="This endpoint is under construction", status_code=status.HTTP_200_OK)
-    # try:
-    #     projects: List[Project] = await project_uc.list_projects(user.id)
-    #     return [project for project in projects]
-    # except Exception as e:
-    #     raise HTTPException(status_code=400, detail=str(e))
+            response.append(
+                ProjectWithCompanies(
+                    id=str(project.id),
+                    descripcion=project.descripcion,
+                    fecha_fin=project.fecha_fin.isoformat() if project.fecha_fin else None,
+                    emails_notificacion=project.emails_notificacion,
+                    contrato=project.contrato,
+                    nombre=project.nombre,
+                    codigo=project.codigo,
+                    card_color=project.card_color,
+                    fecha_inicio=project.fecha_inicio.isoformat(),
+                    estado_proyecto=project.estado_proyecto,
+                    company_id=str(project.company_id) if project.company_id else None,
+                    contrato_url=project.contrato_url,
+                    companies=[CompanyDTO(id=str(project.company.id), nombre=project.company.nombre, codigo=project.company.codigo)] if project.company else None
+                )
+            )
+
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

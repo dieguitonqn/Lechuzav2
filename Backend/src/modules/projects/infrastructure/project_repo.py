@@ -1,5 +1,7 @@
 from sqlmodel import Session, select
+from sqlalchemy.orm import selectinload
 from typing import Optional, Sequence
+from uuid import UUID
 from fastapi import Depends
 from src.infrastucture.database.database import get_session
 from src.modules.projects.application.dtos import ProjectCreateDTO
@@ -39,11 +41,17 @@ class SQLModelProjectRepository(IProject):
         project: Optional[Project] = self.session.get(Project, project_id)
         return project
 
-    def list_projects(self, user_id: str) -> Optional[Sequence[Project]]:
+    def list_projects(self, user_id: UUID) -> Optional[Sequence[Project]]:
         user_projects_links: Optional[Sequence[ProjectUserLink]] = self.session.exec(
             select(ProjectUserLink).where(ProjectUserLink.user_id == user_id)
         ).all()
         project_ids = [link.project_id for link in user_projects_links]
         
-        projects: Optional[Sequence[Project]] = self.session.exec(select(Project).where(Project.id.in_(project_ids))).all()
+        projects: Optional[Sequence[Project]] = self.session.exec(
+            select(Project)
+            .where(Project.id.in_(project_ids))
+            .options(selectinload(Project.company))
+        ).all()
+        print(f"""************
+              Projects for user {user_id}: {[project.company for project in projects] if projects else 'No projects found'}*************""")
         return projects

@@ -2,6 +2,7 @@ from typing import Optional
 from src.modules.auth.domain.interfaces.auth_interface import IAuthRepository
 from ..dtos.auth_dto import LoginResponse, UserResponse
 from ...domain.entities.auth_token import AuthToken, AuthUser
+from src.domain.entities.users import User
 
 
 class AuthUseCase:
@@ -60,3 +61,15 @@ class AuthUseCase:
                 role=auth_token.user.role
             )
         )
+
+    async def get_current_user(self, token: str) -> Optional[User]:
+        """
+        Get current user from access token
+        """
+        if not token:
+            raise ValueError("Token is required")
+
+        # Verify token and get user
+        user = await self.auth_repository.verify_access_token(token)
+        
+        return user

@@ -11,6 +11,7 @@ declare module "next-auth" {
     refresh_token: string
     user: {
       id: number
+      name: string
       email: string
       role: string
     }
@@ -21,7 +22,11 @@ declare module "next-auth" {
    */
   interface Session {
     accessToken: string
+    refreshToken: string
     user: {
+      id: number
+      name: string
+      email: string
       role: string
     } & DefaultSession["user"]
   }
@@ -35,5 +40,8 @@ declare module "next-auth/jwt" {
     accessToken: string
     refreshToken: string
     role: string
+    userId: number
+    userName: string
+    userEmail: string
   }
 }

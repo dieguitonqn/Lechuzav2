@@ -4,9 +4,6 @@ from uuid import UUID
 from src.modules.projects.application.dtos import ProjectCreateDTO
 from src.modules.projects.domain.interfaces import IProject, IFileManager
 from src.domain.entities.projects import Project
-
-
-
 class ProjectUseCase:
     def __init__(self, project_repo: IProject, file_manager: IFileManager):
         self.project_repo = project_repo

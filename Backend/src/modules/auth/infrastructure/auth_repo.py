@@ -149,3 +149,35 @@ class AuthRepository(IAuthRepository):
             return "epen_user"
         else:
             return "user"
+
+    async def verify_access_token(self, token: str) -> Optional[User]:
+        """
+        Verify access token and return user if valid
+        """
+        try:
+            # Decode access token
+            payload = jwt.decode(token, self.secret_key, algorithms=[settings.JWT_ALGORITHM])
+            user_id = payload.get("sub")
+            token_type = payload.get("type")
+
+            # Verify it's an access token
+            if token_type != "access":
+                return None
+
+            if not user_id:
+                return None
+
+            # Find user by ID
+            statement = select(User).where(User.id == user_id)
+            result = self.db.exec(statement)
+            user_db = result.first()
+
+            return user_db
+
+        except jwt.ExpiredSignatureError:
+            return None
+        except jwt.InvalidTokenError:
+            return None
+        except Exception as e:
+            print(f"Error verifying access token: {e}")
+            return None

@@ -7,7 +7,7 @@ from src.modules.projects.application.dtos import ProjectCreateDTO
 from src.domain.entities.projects import Project
 
 
-new_project_router = APIRouter(prefix="/projects")
+new_project_router = APIRouter()
 
 
 @new_project_router.post("/", status_code=status.HTTP_201_CREATED)
