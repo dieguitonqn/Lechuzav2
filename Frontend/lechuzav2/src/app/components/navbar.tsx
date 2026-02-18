@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
-import { getSession } from "next-auth/react";
+import { Menu, X, LogOut } from "lucide-react";
+import { getSession, signOut } from "next-auth/react";
+import { sign } from "crypto";
 
 
 const Navbar = () => {
@@ -22,8 +23,6 @@ const Navbar = () => {
 
   const menuItems = [
     { name: "Dashboard", href: "/dashboard", adminOnly: true },
-    { name: "Nuevo Proyecto", href: "/main/new_project/" },
-    { name: "Usuarios", href: "/users" },
     { name: "Ingresar Documentación", href: "/documents/new" },
     { name: "Corregir Documentación", href: "/documents/corrections" },
     { name: "CAOs", href: "/caos" },
@@ -55,6 +54,18 @@ const Navbar = () => {
                   {item.name}
                 </Link>
               ) : null))}
+              <button
+                onClick={() => {
+                  signOut({ callbackUrl: "/auth/signin" });
+                }}
+                className="ml-4 bg-gradient-to-r from-red-600 to-pink-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:from-red-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 flex items-center gap-2"
+              >
+                <LogOut size={16} />
+                Cerrar Sesión
+              </button>
+            </div>
+            <div>
+              
             </div>
           </div>
 
@@ -84,6 +95,16 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
+            <button
+              onClick={() => {
+                signOut({ callbackUrl: "/auth/signin" });
+                setIsOpen(false);
+              }}
+              className="w-full text-left bg-gradient-to-r from-red-600 to-pink-600 text-white px-3 py-2 rounded-md text-base font-medium hover:from-red-700 hover:to-pink-700 transition-all duration-200 flex items-center gap-2 mt-2"
+            >
+              Cerrar Sesión
+              <LogOut size={16} />
+            </button>
           </div>
         </div>
       )}

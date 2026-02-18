@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Project } from "@/app/main/interfaces";
-import { FileText, Calendar, Building2, ChevronRight, Pencil } from "lucide-react";
+import { FileText, Calendar, Building2, ChevronRight, Pencil, FileCheck } from "lucide-react";
 
 interface ProjectCardsProps {
     projects: Project[];
@@ -66,7 +66,7 @@ export default function ProjectCards({ projects, isAdmin }: ProjectCardsProps) {
 
                         <div className="flex items-start justify-between mb-3 pr-8">
                             <div className="flex-1">
-                                <h2 className="text-xl font-bold mb-1 line-clamp-1">
+                                <h2 className="text-3xl font-bold mb-1 line-clamp-1">
                                     {project.nombre}
                                 </h2>
                                 <p className="text-slate-600 text-sm font-mono">{project.codigo}</p>
@@ -119,15 +119,31 @@ export default function ProjectCards({ projects, isAdmin }: ProjectCardsProps) {
                             )}
                         </div>
 
-                        {/* Botón de acción */}
-                        <Link
-                            href={`/main/projects/${project.id}/documents`}
-                            className={`flex items-center justify-center w-full px-4 py-3 bg-${project.card_color}-600 hover:bg-${project.card_color}-700 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg group`}
-                        >
-                            <FileText className="w-5 h-5 mr-2" />
-                            Ver Documentos
-                            <ChevronRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </Link>
+                        {/* Botones de acción */}
+                        <div className="space-y-3">
+                            {/* Link al contrato */}
+                            {project.contrato_url && (
+                                <Link
+                                    href={project.contrato_url || "#"}
+                                    target="_blank"
+                                    className={`flex items-center justify-center w-full px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.01] border border-slate-200 hover:border-slate-300 group`}
+                                >
+                                    <FileCheck className="w-4 h-4 mr-2" />
+                                    Ver Contrato EPEN
+                                    <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                            )}
+                            
+                            {/* Botón principal */}
+                            <Link
+                                href={`/main/projects/${project.id}/documents`}
+                                className={`flex items-center justify-center w-full px-4 py-3 bg-${project.card_color}-600 hover:bg-${project.card_color}-700 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg group`}
+                            >
+                                <FileText className="w-5 h-5 mr-2" />
+                                Ver Documentos
+                                <ChevronRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Indicador de hover */}
