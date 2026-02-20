@@ -40,5 +40,5 @@ async def login(
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail="Internal server error"
+            detail=f"Internal server error: {e}"
         )
