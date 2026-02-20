@@ -6,7 +6,7 @@ from fastapi import (
     status,
     Request,
 )
-from src.modules.documents.application.dtos import ingresoDocsDTO, DocumentDTO
+from src.modules.documents.application.dtos import DocumentDTO
 from src.modules.auth.presentation.api.v1.dependencies.get_current_user import (
     get_current_user,
 )
@@ -117,14 +117,14 @@ async def upload_documents(request: Request, user: User = Depends(get_current_us
             np_ttal_file.filename = re.sub(r'[^\w\-_\.]', '_', np_ttal_file.filename)
         
         # Crear el DTO principal
-        ingreso_dto = ingresoDocsDTO(
-            obra_id=str(obra_id),
-            obra_descripcion=str(obra_descripcion),
-            np_ttal=str(np_ttal),
-            np_ttal_file=np_ttal_file,
-            np_ttal_descripcion=str(np_ttal_descripcion),
-            documentos=documentos,
-        )
+        # ingreso_dto = ingresoDocsDTO(
+        #     obra_id=str(obra_id),
+        #     obra_descripcion=str(obra_descripcion),
+        #     np_ttal=str(np_ttal),
+        #     np_ttal_file=np_ttal_file,
+        #     np_ttal_descripcion=str(np_ttal_descripcion),
+        #     documentos=documentos,
+        # )
 
         # Aquí iría la lógica de negocio para procesar los documentos
         # return await document_uc.upload_documents(ingreso_dto, user)

@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Header, Response
-from typing import Optional, List
+from fastapi import APIRouter
 from src.modules.documents.presentation.api.v1.endpoints.upload_docs import upload_docs_router
 
 
