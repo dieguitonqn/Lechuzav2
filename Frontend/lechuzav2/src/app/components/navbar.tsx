@@ -23,8 +23,8 @@ const Navbar = () => {
 
   const menuItems = [
     { name: "Dashboard", href: "/dashboard", adminOnly: true },
-    { name: "Ingresar Documentación", href: "/documents/new" },
-    { name: "Corregir Documentación", href: "/documents/corrections" },
+    { name: "Ingresar Documentación", href: "/main/documentos" },
+    { name: "Corregir Documentación", href: "/main/informes" },
     { name: "CAOs", href: "/caos" },
   ];
 

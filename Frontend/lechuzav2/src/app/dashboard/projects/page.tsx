@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { FolderKanban, Search, Plus, Calendar } from "lucide-react";
 
 export default function ProjectsPage() {
@@ -56,10 +57,12 @@ export default function ProjectsPage() {
             Administra los proyectos del sistema
           </p>
         </div>
-        <button className="flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
+        <Link
+          href="/dashboard/projects/new_project"
+          className="flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
           <Plus className="w-5 h-5 mr-2" />
           Nuevo Proyecto
-        </button>
+        </Link>
       </div>
 
       {/* Search and Filters */}
