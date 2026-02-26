@@ -30,7 +30,8 @@ export interface DocsIn{
 }
 
 export interface IngresoDocs {
-    obra_id:string;
+    obra_id: string;
+    obra_codigo:string;
     obra_descripcion:string;
     np_ttal:string;
     np_ttal_file:File;

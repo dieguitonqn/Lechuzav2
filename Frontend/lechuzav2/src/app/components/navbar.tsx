@@ -23,7 +23,7 @@ const Navbar = () => {
 
   const menuItems = [
     { name: "Dashboard", href: "/dashboard", adminOnly: true },
-    { name: "Ingresar Documentación", href: "/main/documentos" },
+    { name: "Ingresar Documentación", href: "/main/documentos/ingreso" },
     { name: "Corregir Documentación", href: "/main/informes" },
     { name: "CAOs", href: "/caos" },
   ];
@@ -34,7 +34,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center">
+            <Link href="/main" className="flex items-center">
               <div className="text-2xl font-bold text-red-600">
                 Lechuza V2.0
               </div>
@@ -97,7 +97,7 @@ const Navbar = () => {
             ))}
             <button
               onClick={() => {
-                signOut({ callbackUrl: "/auth/signin" });
+                signOut({ callbackUrl: "/" });
                 setIsOpen(false);
               }}
               className="w-full text-left bg-gradient-to-r from-red-600 to-pink-600 text-white px-3 py-2 rounded-md text-base font-medium hover:from-red-700 hover:to-pink-700 transition-all duration-200 flex items-center gap-2 mt-2"

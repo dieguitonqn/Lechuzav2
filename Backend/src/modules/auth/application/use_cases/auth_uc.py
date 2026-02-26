@@ -1,7 +1,7 @@
 from typing import Optional
 from src.modules.auth.domain.interfaces.auth_interface import IAuthRepository
 from ..dtos.auth_dto import LoginResponse, UserResponse
-from ...domain.entities.auth_token import AuthToken, AuthUser
+from ...domain.entities.auth_token import AuthToken
 from src.domain.entities.users import User
 
 

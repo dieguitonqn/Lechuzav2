@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
-import { Project, IngresoDocs, DocsIn } from './interfaces';
+import { Project, IngresoDocs, DocsIn } from '../interfaces';
 import { FileText, Building2, Upload, Plus, Minus, Send, Calendar, FileCheck, Info } from 'lucide-react';
 
 export default function IngresoDocumentos() {
@@ -15,7 +15,8 @@ export default function IngresoDocumentos() {
     
     // Estado del formulario
     const [formData, setFormData] = useState<IngresoDocs>({
-        obra_id: '',
+        obra_id:'',
+        obra_codigo: '',
         obra_descripcion: '',
         np_ttal: '',
         np_ttal_file: null as any,
@@ -94,6 +95,7 @@ export default function IngresoDocumentos() {
         setFormData(prev => ({
             ...prev,
             obra_id: projectId,
+            obra_codigo: selectedProject?.codigo || '',
             obra_descripcion: selectedProject?.descripcion || ''
         }));
     };
@@ -122,7 +124,7 @@ export default function IngresoDocumentos() {
 
     // Validar formulario
     const validateForm = (): boolean => {
-        if (!formData.obra_id) {
+        if (!formData.obra_codigo) {
             alert('Por favor selecciona una obra');
             return false;
         }
@@ -156,6 +158,7 @@ export default function IngresoDocumentos() {
             
             // Datos del transmittal
             submitFormData.append('obra_id', formData.obra_id);
+            submitFormData.append('obra_codigo', formData.obra_codigo);
             submitFormData.append('obra_descripcion', formData.obra_descripcion);
             submitFormData.append('np_ttal', formData.np_ttal);
             submitFormData.append('np_ttal_file', formData.np_ttal_file);
@@ -170,7 +173,7 @@ export default function IngresoDocumentos() {
             });
             // Debug: Log form data for inspection
             console.log('FormData preparada para envío:');
-            console.log('- Obra ID:', formData.obra_id);
+            console.log('- Obra Código:', formData.obra_codigo);
             console.log('- Obra descripción:', formData.obra_descripcion);
             console.log('- Transmittal N°:', formData.np_ttal);
             console.log('- Transmittal file:', formData.np_ttal_file?.name, formData.np_ttal_file?.size, 'bytes');
@@ -207,7 +210,8 @@ export default function IngresoDocumentos() {
                 alert('Documentos enviados exitosamente');
                 // Reset form
                 setFormData({
-                    obra_id: '',
+                    obra_id:'',
+                    obra_codigo: '',
                     obra_descripcion: '',
                     np_ttal: '',
                     np_ttal_file: null as any,
