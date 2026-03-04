@@ -1,6 +1,9 @@
 from fastapi import UploadFile
 from typing import List, Any, Dict
 from dataclasses import dataclass
+
+from pydantic import BaseModel
+from src.domain.entities.documents import Document
 from src.domain.entities.users import User
 
 @dataclass
@@ -42,3 +45,16 @@ class DocumentToSaveFile:
     file: UploadFile
     obra_id: str
     obra_slug: str
+
+class PaginationInfo(BaseModel):
+    page: int
+    page_size: int
+    total: int
+    total_pages: int
+    has_next: bool
+    has_prev: bool
+
+
+class DocumentsResponse(BaseModel):
+    documents: list[Document]
+    pagination: PaginationInfo
