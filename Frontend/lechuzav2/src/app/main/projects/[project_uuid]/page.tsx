@@ -1,6 +1,5 @@
-import { notFound } from 'next/navigation'
 import { auth } from "@/auth"
-import ProjectDocumentsTable from '@/app/components/project-documents-table'
+import ProjectDocumentsTable from '@/app/main/projects/components/project-documents-table'
 import { Button } from '@/components/ui/button'
 
 // Tipos para los datos

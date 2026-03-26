@@ -1,6 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { Document, Filters, ProjectDocumentsTableProps } from '../interfaces'
+
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -21,40 +23,9 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
-interface Document {
-    id: string
-    codigo: string
-    revision: string
-    descripcion: string
-    document_file?: string
-    fecha_ingreso: string
-    calificacion?: string
-    informe_ingenieria?: string
-    fecha_informe?: string
-    comunicacion_ingreso?: string
-    comunicacion_egreso?: string
-    project_id: string
-}
-
-interface Filters {
-    codigo: string
-    revision: string
-    descripcion: string
-    comunicacion_ingreso: string
-    fecha_ingreso: string
-    calificacion: string
-    informe_ingenieria: string
-    fecha_informe: string
-    comunicacion_egreso: string
-}
-
-interface ProjectDocumentsTableProps {
-    documents: Document[]
-    isAdmin: boolean
-    projectId: string
-}
 
 const ITEMS_PER_PAGE = 10
+
 
 export default function ProjectDocumentsTable({
     documents,
@@ -62,6 +33,7 @@ export default function ProjectDocumentsTable({
     projectId
 }: ProjectDocumentsTableProps) {
     const [currentPage, setCurrentPage] = useState(1)
+    const [documentsFromAPI, setDocumentsFromAPI] = useState<Document[]>([])
     const [filters, setFilters] = useState<Filters>({
         codigo: '',
         revision: '',
@@ -74,32 +46,48 @@ export default function ProjectDocumentsTable({
         comunicacion_egreso: ''
     })
 
-    // Filtrar documentos
-    const filteredDocuments = useMemo(() => {
-        return documents.filter(doc => {
-            return (
-                doc.codigo.toLowerCase().includes(filters.codigo.toLowerCase()) &&
-                doc.revision.toLowerCase().includes(filters.revision.toLowerCase()) &&
-                doc.descripcion.toLowerCase().includes(filters.descripcion.toLowerCase()) &&
-                (doc.comunicacion_ingreso || '').toLowerCase().includes(filters.comunicacion_ingreso.toLowerCase()) &&
-                doc.fecha_ingreso.includes(filters.fecha_ingreso) &&
-                (doc.calificacion || '').toLowerCase().includes(filters.calificacion.toLowerCase()) &&
-                (doc.informe_ingenieria || '').toLowerCase().includes(filters.informe_ingenieria.toLowerCase()) &&
-                (doc.fecha_informe || '').includes(filters.fecha_informe) &&
-                (doc.comunicacion_egreso || '').toLowerCase().includes(filters.comunicacion_egreso.toLowerCase())
-            )
-        })
-    }, [documents, filters])
+    const hasActiveFilters = Object.values(filters).some(filter => filter !== '')
+    const documentsToDisplay = hasActiveFilters ? documentsFromAPI : documents
 
     // Paginación
-    const totalPages = Math.ceil(filteredDocuments.length / ITEMS_PER_PAGE)
+    const totalPages = Math.ceil(documentsToDisplay.length / ITEMS_PER_PAGE)
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-    const paginatedDocuments = filteredDocuments.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+    const paginatedDocuments = documentsToDisplay.slice(startIndex, startIndex + ITEMS_PER_PAGE)
 
     // Handlers
-    const handleFilterChange = (field: keyof Filters, value: string) => {
-        setFilters(prev => ({ ...prev, [field]: value }))
+    const handleFilterChange = async (field: keyof Filters, value: string) => {
+        const nextFilters = { ...filters, [field]: value }
+        setFilters(nextFilters)
         setCurrentPage(1) // Reset to first page when filtering
+
+        const hasAnyFilter = Object.values(nextFilters).some(filter => filter !== '')
+        if (!hasAnyFilter) {
+            setDocumentsFromAPI([])
+            return
+        }
+
+        const params = new URLSearchParams({
+            projectId,
+            page: '1',
+            pageSize: ITEMS_PER_PAGE.toString(),
+            nameFilter: nextFilters.descripcion,
+            codeFilter: nextFilters.codigo,
+            revisionFilter: nextFilters.revision,
+            npTtalFilter: nextFilters.comunicacion_ingreso,
+            statusFilter: nextFilters.calificacion,
+            fechaIngresoFilter: nextFilters.fecha_ingreso,
+            correctionReportFilter: nextFilters.informe_ingenieria,
+        })
+
+        const filteredDocs = await fetch(`/api/docs?${params.toString()}`)
+        if (!filteredDocs.ok) {
+            setDocumentsFromAPI([])
+            return
+        }
+
+        const data = await filteredDocs.json()
+        const docs = Array.isArray(data) ? data : data.documents
+        setDocumentsFromAPI(Array.isArray(docs) ? docs : [])
     }
 
     const clearFilters = () => {
@@ -114,10 +102,9 @@ export default function ProjectDocumentsTable({
             fecha_informe: '',
             comunicacion_egreso: ''
         })
+        setDocumentsFromAPI([])
         setCurrentPage(1)
     }
-
-    const hasActiveFilters = Object.values(filters).some(filter => filter !== '')
 
     const formatDate = (dateString: string) => {
         if (!dateString) return '-'
@@ -160,7 +147,7 @@ export default function ProjectDocumentsTable({
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <div className="text-sm text-muted-foreground">
-                        Mostrando {paginatedDocuments.length} de {filteredDocuments.length} documento(s)
+                        Mostrando {paginatedDocuments.length} de {documentsToDisplay.length} documento(s)
                         {hasActiveFilters && ` (filtrados de ${documents.length} total)`}
                     </div>
                     {hasActiveFilters && (

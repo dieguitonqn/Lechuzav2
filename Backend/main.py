@@ -9,6 +9,7 @@ from passlib.context import CryptContext
 from src.domain.entities.users import User
 from src.domain.entities.statuses import Status
 from src.domain.entities.projects import Project
+from src.domain.entities.documents import Document
 from src.domain.entities.models_links import ProjectUserLink
 from src.domain.entities.companies import Company
 from src.modules.routers import module_routers
@@ -67,6 +68,7 @@ async def lifespan(app: FastAPI):
             print(
                 "El usuario administrador por defecto ya existe. Omitiendo la creación."
             )
+        admin_user = existing_admin or user_admin_default
         default_status = Status(
             nombre="EN REVISION",
             descripcion="Documento en proceso de revisión",
@@ -81,6 +83,7 @@ async def lifespan(app: FastAPI):
             print(f"Estado por defecto creado: {default_status.nombre}")
         else:
             print("El estado por defecto ya existe. Omitiendo la creación.")
+        status_for_docs = existing_status or default_status
         # ---------------------------------------------------------------------------------------------
         # -----------------------EMPRESA DEFECTO-----------------------
         default_company = Company(
@@ -96,8 +99,10 @@ async def lifespan(app: FastAPI):
             session.commit()
             session.refresh(default_company)
             print(f"Empresa por defecto creada: {default_company.nombre}")
+            company_epen = default_company
         else:
             print("La empresa por defecto ya existe. Omitiendo la creación.")
+            company_epen = existing_company
 
         default_company2 = Company(
             nombre="YPF SA",
@@ -113,8 +118,10 @@ async def lifespan(app: FastAPI):
             session.commit()
             session.refresh(default_company2)
             print(f"Empresa por defecto creada: {default_company2.nombre}")
+            company_ypf = default_company2
         else:
             print("La empresa por defecto ya existe. Omitiendo la creación.")
+            company_ypf = existing_company2
 
         default_company3 = Company(
             nombre="Grupo Oeste",
@@ -139,7 +146,7 @@ async def lifespan(app: FastAPI):
             codigo="PRY-001",
             descripcion="Este es un proyecto creado por defecto al iniciar la aplicación.",
             card_color="blue",  # Color específico para este proyecto por defecto
-            company_id=existing_company.id,
+            company_id=company_epen.id,
         )
         # Verificar si el proyecto por defecto ya existe
         statement = select(Project).where(Project.nombre == default_project.nombre)
@@ -149,8 +156,10 @@ async def lifespan(app: FastAPI):
             session.commit()
             session.refresh(default_project)
             print(f"Proyecto por defecto creado: {default_project.nombre}")
+            project_1 = default_project
         else:
             print("El proyecto por defecto ya existe. Omitiendo la creación.")
+            project_1 = existing_project
 
             # ---------------------------------------------------------------------------------------------
         # -----------------------PROYECTO DEFECTO 2-----------------------
@@ -158,7 +167,7 @@ async def lifespan(app: FastAPI):
             nombre="Proyecto por defecto 2",
             codigo="PRY-002",
             descripcion="Este es un segundo proyecto creado por defecto al iniciar la aplicación.",
-            company_id=existing_company2.id,
+            company_id=company_ypf.id,
         )
         # Verificar si el proyecto por defecto ya existe
         statement = select(Project).where(Project.nombre == default_project2.nombre)
@@ -168,21 +177,76 @@ async def lifespan(app: FastAPI):
             session.commit()
             session.refresh(default_project2)
             print(f"Proyecto por defecto creado: {default_project2.nombre}")
+            project_2 = default_project2
         else:
             print("El proyecto por defecto ya existe. Omitiendo la creación.")
+            project_2 = existing_project2
+
+        # ---------------------------------------------------------------------------------------------
+        # -----------------------DOCUMENTOS DE EJEMPLO-----------------------
+        sample_documents = [
+            Document(
+                codigo="DOC-PRY001-001",
+                nombre="Plano General de Instalacion",
+                revision="A",
+                estado_id=status_for_docs.id,
+                project_id=project_1.id,
+                ttal_np_id=None,
+            ),
+            Document(
+                codigo="DOC-PRY001-002",
+                nombre="Especificacion Tecnica de Materiales",
+                revision="B",
+                estado_id=status_for_docs.id,
+                project_id=project_1.id,
+                ttal_np_id=None,
+            ),
+            Document(
+                codigo="DOC-PRY002-001",
+                nombre="Memoria de Calculo Estructural",
+                revision="A",
+                estado_id=status_for_docs.id,
+                project_id=project_2.id,
+                ttal_np_id=None,
+            ),
+            Document(
+                codigo="DOC-PRY002-002",
+                nombre="Procedimiento de Montaje",
+                revision="C",
+                estado_id=status_for_docs.id,
+                project_id=project_2.id,
+                ttal_np_id=None,
+            ),
+        ]
+
+        for sample_document in sample_documents:
+            statement = select(Document).where(
+                (Document.codigo == sample_document.codigo)
+                & (Document.project_id == sample_document.project_id)
+            )
+            existing_document = session.exec(statement).first()
+            if not existing_document:
+                session.add(sample_document)
+                session.commit()
+                session.refresh(sample_document)
+                print(f"Documento de ejemplo creado: {sample_document.codigo}")
+            else:
+                print(
+                    f"El documento de ejemplo {sample_document.codigo} ya existe. Omitiendo la creación."
+                )
         # ---------------------------------------------------------------------------------------------
         # -----------------------Model Link DEFECTO-----------------------
-        if existing_admin and existing_project:
+        if admin_user and project_1:
             # Verificar si el enlace por defecto ya existe
             statement = select(ProjectUserLink).where(
-                (ProjectUserLink.project_id == existing_project.id)
-                & (ProjectUserLink.user_id == existing_admin.id)
+                (ProjectUserLink.project_id == project_1.id)
+                & (ProjectUserLink.user_id == admin_user.id)
             )
             existing_link = session.exec(statement).first()
             if not existing_link:
                 default_link = ProjectUserLink(
-                    project_id=existing_project.id,
-                    user_id=existing_admin.id,
+                    project_id=project_1.id,
+                    user_id=admin_user.id,
                     can_view_docs=True,
                     can_upload_docs=True,
                     can_correct_docs=True,
@@ -190,22 +254,22 @@ async def lifespan(app: FastAPI):
                 session.add(default_link)
                 session.commit()
                 print(
-                    f"Enlace por defecto creado entre el proyecto '{existing_project.nombre}' y el usuario '{existing_admin.email}'."
+                    f"Enlace por defecto creado entre el proyecto '{project_1.nombre}' y el usuario '{admin_user.email}'."
                 )
             else:
                 print("El enlace por defecto ya existe. Omitiendo la creación.")
 
-            if existing_admin and existing_project2:
+            if admin_user and project_2:
                 # Verificar si el enlace por defecto ya existe
                 statement = select(ProjectUserLink).where(
-                    (ProjectUserLink.project_id == existing_project2.id)
-                    & (ProjectUserLink.user_id == existing_admin.id)
+                    (ProjectUserLink.project_id == project_2.id)
+                    & (ProjectUserLink.user_id == admin_user.id)
                 )
                 existing_link = session.exec(statement).first()
                 if not existing_link:
                     default_link = ProjectUserLink(
-                        project_id=existing_project2.id,
-                        user_id=existing_admin.id,
+                        project_id=project_2.id,
+                        user_id=admin_user.id,
                         can_view_docs=True,
                         can_upload_docs=True,
                         can_correct_docs=True,
@@ -213,10 +277,12 @@ async def lifespan(app: FastAPI):
                     session.add(default_link)
                     session.commit()
                     print(
-                        f"Enlace por defecto creado entre el proyecto '{existing_project2.nombre}' y el usuario '{existing_admin.email}'."
+                        f"Enlace por defecto creado entre el proyecto '{project_2.nombre}' y el usuario '{admin_user.email}'."
                     )
                 else:
                     print("El enlace por defecto ya existe. Omitiendo la creación.")
+
+                    
 
         yield  # Yield es para que FastAPI pueda iniciar y ejecutar la aplicación
     # Here you could add any cleanup code if needed
